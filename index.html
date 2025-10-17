@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Interaktif Geografi SMA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Kuis Perkembangan Wilayah, Revolusi Industri, dan Pengaruhnya</h1>
+        </header>
+
+        <div id="quiz-start-screen" class="card">
+            <h2>Selamat Datang!</h2>
+            <p>Kuis ini terdiri dari 20 soal pilihan ganda. Kerjakan dengan teliti.</p>
+            <p class="warning-text">⚠️ Kuis hanya bisa dikerjakan **satu kali** per perangkat.</p>
+            <label for="student-name">Masukkan Nama Lengkap Anda:</label>
+            <input type="text" id="student-name" placeholder="Contoh: Budi Santoso" required>
+            <button id="start-quiz-btn" class="primary-btn" disabled>Mulai Kuis</button>
+        </div>
+
+        <div id="quiz-active-area" style="display: none;">
+            <div id="quiz-progress-bar">
+                <span id="question-indicator">1 dari 20</span>
+                <div id="progress-container">
+                    <div id="progress-fill"></div>
+                </div>
+            </div>
+
+            <div id="question-card" class="card">
+                </div>
+
+            <div id="navigation-controls">
+                <button id="prev-btn" class="secondary-btn" disabled>← Sebelumnya</button>
+                <button id="next-btn" class="primary-btn">Selanjutnya →</button>
+                <button id="submit-btn" class="submit-btn" style="display: none;">Kirim Jawaban</button>
+            </div>
+        </div>
+        
+        <div id="quiz-result-screen" class="card" style="display: none;">
+            </div>
+
+        <div id="admin-panel" class="card" style="display: none;">
+            <h3>Mode Guru (Admin)</h3>
+            <p>Untuk melihat dan mengunduh hasil kuis.</p>
+            <button id="download-results-btn" class="primary-btn">Download Hasil Kuis (.csv)</button>
+            <button id="reset-results-btn" class="secondary-btn" style="background-color: #f44336; color: white;">Reset Semua Hasil</button>
+        </div>
+        
+        <div id="already-completed-screen" class="card" style="display: none;">
+            <h2>Kuis Selesai</h2>
+            <p>Kamu sudah menyelesaikan kuis ini. Terima kasih! 🙏</p>
+        </div>
+        
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
