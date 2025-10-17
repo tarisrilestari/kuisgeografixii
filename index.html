@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Geografi SMA Kelas XII - Bab 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2196F3; /* Biru cerah */
+            --secondary-color: #BBDEFB; /* Biru lembut */
+            --background-color: #F5F7FA; /* Putih kebiruan */
+            --text-color: #333333;
+            --card-background: #ffffff;
+            --success-color: #4CAF50;
+            --font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--card-background);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 30px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        .start-screen, .quiz-screen, .result-screen {
+            padding: 20px;
+        }
+
+        /* Card untuk Soal */
+        .question-card {
+            background-color: #f7f7ff;
+            border: 1px solid var(--secondary-color);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            animation: fadeIn 0.5s ease-out; /* Animasi lembut */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-card p {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .options label {
+            display: block;
+            background-color: #ffffff;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            border: 1px solid #e0e0e0;
+        }
+
+        .options label:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        input[type="radio"] {
+            margin-right: 10px;
+            accent-color: var(--primary-color);
+        }
+
+        /* Tombol */
+        button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        button:hover {
+            background-color: #1E88E5;
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        #next-button {
+            margin-top: 30px;
+        }
+        
+        /* Hasil */
+        .result-screen h2 {
+            color: var(--success-color);
+            text-align: center;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .result-screen p {
+            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .motivation-message {
+            text-align: center;
+            font-style: italic;
+            color: var(--primary-color);
+            margin-top: 20px;
+            font-size: 1.1em;
+        }
+
+        /* Input Nama */
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        /* Tabel Hasil */
+        #history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        #history-table th, #history-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        #history-table th {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            font-weight: 600;
+        }
+        
+        #download-button {
+            background-color: var(--success-color);
+        }
+        
+        #download-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Kuis Perkembangan Wilayah, Revolusi Industri, dan Pengaruhnya</h1>
+        
+        <div id="start-screen" class="start-screen">
+            <div class="input-group">
+                <label for="student-name">Masukkan Nama Anda:</label>
+                <input type="text" id="student-name" placeholder="Nama Lengkap">
+            </div>
+            <button onclick="startQuiz()">Mulai Kuis</button>
+        </div>
+
+        <div id="quiz-screen" class="quiz-screen" style="display:none;">
+            <div id="question-container">
+                </div>
+            <button id="next-button" onclick="nextQuestion()">Soal Berikutnya</button>
+        </div>
+
+        <div id="result-screen" class="result-screen" style="display:none;">
+            <h2>Hasil Kuis Anda!</h2>
+            <p>Skor Anda: <span id="final-score">0</span> / 20</p>
+            <div class="motivation-message">
+                Kerja bagus! Terus tingkatkan kemampuanmu 💪
+            </div>
+            
+            <button id="download-button" onclick="downloadResults()">Download Hasil (CSV)</button>
+            
+            <h3>Riwayat Hasil Kuis:</h3>
+            <table id="history-table">
+                <thead>
+                    <tr>
+                        <th>Nama</th>
+                        <th>Skor</th>
+                        <th>Waktu Selesai</th>
+                        <th>Tanggal</th>
+                    </tr>
+                </thead>
+                <tbody id="history-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <script>
+        // Kode JavaScript akan diletakkan di bagian berikutnya
+    </script>
+</body>
+</html>
