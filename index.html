@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Pembangunan Wilayah & Revolusi Industri</title>
+    <style>
+        /* Base Styles */
+        :root {
+            --primary-color: #007BFF;
+            --primary-light: #e0f0ff;
+            --secondary-color: #28a745;
+            --text-color: #333;
+            --bg-color: #f8f9fa;
+            --card-bg: #fff;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: auto;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header */
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        /* Card Styling */
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        /* Input Form */
+        #start-screen label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        #start-screen input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+
+        /* Buttons */
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: var(--transition);
+            margin-right: 10px;
+        }
+
+        button:hover:not(:disabled) {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        button:disabled {
+            background-color: #adb5bd;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        #download-btn {
+            background-color: var(--secondary-color);
+            margin-top: 20px;
+        }
+        
+        #download-btn:hover:not(:disabled) {
+            background-color: #1e7e34;
+        }
+
+        /* Quiz Content */
+        #quiz-container {
+            display: none;
+        }
+
+        .question-card {
+            display: none;
+            animation: slideIn 0.5s forwards;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .question-card.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Question and Options */
+        .question-text {
+            font-size: 1.25em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            background-color: var(--card-bg);
+        }
+
+        .option:hover {
+            background-color: var(--primary-light);
+            border-color: var(--primary-color);
+        }
+
+        .option input[type="radio"] {
+            margin-right: 15px;
+            transform: scale(1.2);
+        }
+
+        /* Navigation and Status */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .status {
+            text-align: center;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: var(--primary-light);
+            border-radius: 8px;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* Result Screen */
+        #result-screen {
+            display: none;
+            text-align: center;
+            padding: 50px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        #result-screen h2 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        #final-score {
+            font-size: 3em;
+            color: var(--secondary-color);
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        /* Attempted Message */
+        #attempted-message {
+            display: none;
+            text-align: center;
+            padding: 50px;
+            background: #fff3cd; /* Light warning color */
+            color: #856404; /* Dark warning text */
+            border: 1px solid #ffeeba;
+            border-radius: 12px;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Kuis Geografi SMA Kelas XII</h1>
+        <h1 style="font-size: 1.5em; color: var(--text-color);">Pembangunan Wilayah & Revolusi Industri</h1>
+
+        <div id="attempted-message" class="card">
+            Kamu sudah menyelesaikan kuis ini. Terima kasih!
+        </div>
+
+        <div id="start-screen" class="card">
+            <h2>Mulai Kuis</h2>
+            <label for="student-name">Masukkan Nama Lengkap Anda:</label>
+            <input type="text" id="student-name" placeholder="Nama Siswa" required>
+            <button id="start-quiz-btn" disabled>Mulai Kuis</button>
+            <button id="download-btn" style="display: none;">Download Hasil Kuis (.csv)</button>
+        </div>
+
+        <div id="quiz-container">
+            <div class="card">
+                <div class="status" id="question-status"></div>
+                <div id="questions-list">
+                    </div>
+                <div class="navigation">
+                    <button id="prev-btn" disabled>← Sebelumnya</button>
+                    <button id="next-btn">Selanjutnya →</button>
+                </div>
+            </div>
+            <div class="card" style="text-align: right; margin-top: 15px;">
+                <button id="submit-btn" disabled>Kirim Jawaban</button>
+            </div>
+        </div>
+
+        <div id="result-screen" class="card">
+            <h2>Kuis Selesai!</h2>
+            <p>Skor Akhir Anda:</p>
+            <div id="final-score"></div>
+            <p id="motivational-message">Kerja bagus! Terus tingkatkan kemampuanmu 💪</p>
+        </div>
+
+    </div>
+
+    <script>
+        const QUESTIONS = [
+            {
+                text: "Pembangunan adalah proses perubahan yang bertujuan untuk...",
+                options: [
+                    "meningkatkan kesejahteraan masyarakat di bidang ekonomi saja",
+                    "mempercepat pertumbuhan ekonomi dengan mengabaikan aspek sosial",
+                    "meningkatkan kualitas hidup masyarakat di berbagai aspek secara berkelanjutan",
+                    "meningkatkan pendapatan negara tanpa memperhatikan lingkungan",
+                    "menurunkan pendapatan negara"
+                ],
+                answer: 2 // c
+            },
+            {
+                text: "Salah satu indikator utama dalam mengukur keberhasilan pembangunan yang mencakup aspek kesehatan, pendidikan, dan pendapatan adalah...",
+                options: [
+                    "produk domestik bruto (PDB)",
+                    "indeks pembangunan manusia (IPM)",
+                    "indeks persepsi korupsi",
+                    "indeks harga konsumen",
+                    "indeks kesejahteraan"
+                ],
+                answer: 1 // b
+            },
+            {
+                text: "Pembangunan yang menggunakan konsep ekonomi sirkular bertujuan untuk...",
+                options: [
+                    "membuang limbah dengan lebih cepat",
+                    "menggunakan kembali dan mendaur ulang produk untuk mengurangi penggunaan sumber daya alam",
+                    "menciptakan lebih banyak produk sekali pakai",
+                    "meningkatkan ketergantungan pada sumber daya non-terbarukan",
+                    "meningkatkan sumber daya manusia"
+                ],
+                answer: 1 // b
+            },
+            {
+                text: "Berikut ini yang merupakan indikator kesejahteraan sosial dalam pembangunan adalah...",
+                options: [
+                    "tingkat pengangguran",
+                    "tingkat pencemaran udara",
+                    "jumlah pendapatan nasional",
+                    "jumlah ekspor dan impor",
+                    "tingkat kelahiran"
+                ],
+                answer: 0 // a
+            },
+            {
+                text: "Revolusi Industri 4.0 adalah era yang ditandai dengan...",
+                options: [
+                    "penggunaan tenaga uap sebagai penggerak utama mesin",
+                    "integrasi teknologi digital, kecerdasan buatan, dan Internet of Things dalam berbagai sektor",
+                    "peralihan dari mesin mekanik ke listrik",
+                    "peningkatan kapasitas produksi industri secara manual",
+                    "penggabungan teknologi digital dan mesin penggerak"
+                ],
+                answer: 1 // b
+            },
+            {
+                text: "Teknologi yang paling berperan dalam mendukung implementasi Masyarakat 5.0 adalah...",
+                options: [
+                    "teknologi cetak manual",
+                    "teknologi pertanian tradisional",
+                    "kecerdasan buatan (AI) dan big data",
+                    "sumber daya manusia tanpa teknologi",
+                    "teknologi berkelanjutan"
+                ],
+                answer: 2 // c
+            },
+            {
+                text: "Salah satu tantangan yang muncul akibat Revolusi Industri 4.0 adalah...",
+                options: [
+                    "meningkatnya lapangan pekerjaan tanpa keahlian khusus",
+                    "ketidaksetaraan kesempatan kerja karena automasi menggantikan pekerjaan manusia",
+                    "meningkatnya biaya produksi secara drastis",
+                    "meningkatnya keterampilan masyarakat tanpa pelatihan tambahan",
+                    "penurunan tenaga kerja produktif"
+                ],
+                answer: 1 // b
+            },
+            {
+                text: "Dalam konsep Masyarakat 5.0, teknologi seperti kecerdasan buatan dan robotika digunakan untuk...",
+                options: [
+                    "menggantikan semua pekerjaan manusia di bidang jasa",
+                    "memecahkan masalah sosial seperti kesehatan, pendidikan, dan transportasi",
+                    "menghilangkan kebutuhan manusia akan tenaga kerja manual",
+                    "meningkatkan keuntungan perusahaan sebesar-besarnya",
+                    "meningkatkan pendapatan perkapita"
+                ],
+                answer: 1 // b
+            },
+            {
+                text: "Salah satu manfaat utama teknologi Internet of Things (IoT) dalam Revolusi Industri 4.0 adalah...",
+                options: [
+                    "mengurangi jumlah data yang dibutuhkan",
+                    "menghubungkan perangkat secara real-time untuk meningkatkan efisiensi dan produktivitas",
+                    "menurunkan biaya tenaga kerja tanpa mengoptimalkan proses",
+                    "mengganti semua tenaga kerja manusia tanpa pelatihan",
+                    "menurunkan produktivitas pekerja"
+                ],
+                answer: 1 // b
+            },
+            {
+                text: "Fokus utama Masyarakat 5.0 adalah menciptakan masyarakat yang...",
+                options: [
+                    "terlalu bergantung pada teknologi tanpa interaksi sosial",
+                    "seimbang antara ekonomi, teknologi, dan kesejahteraan sosial",
+                    "hanya mengejar keuntungan teknologi dan ekonomi",
+                    "mengabaikan aspek sosial dalam perkembangan teknologi",
+                    "berfokus pada kemajuan teknologi"
+                ],
+                answer: 1 // b
+            },
+            {
+                text: "Tindakan yang mencerminkan pembangunan berkelanjutan ditunjukkan oleh nomor: (1) Menggunakan teknologi yang tidak ramah lingkungan, (2) Menggunakan bahan tambang sebanyak-banyaknya, (3) Reklamasi dan rehabilitasi lahan kritis, (4) Pengembangan dan pengelolaan keanekaragaman hayati.",
+                options: [
+                    "(3) dan (4)",
+                    "(1) dan (2)",
+                    "(2) dan (3)",
+                    "(1) dan (3)",
+                    "(2) dan (4)"
+                ],
+                answer: 0 // a
+            },
+            {
+                text: "Upaya-upaya yang dilakukan oleh pemerintah dalam mengatasi permasalahan pembangunan ekonomi ditunjukkan nomor: (1) Penyediaan kebutuhan pokok untuk keluarga miskin, (2) Pengembangan sistem jaminan sosial, (3) Pelaksanaan IDT (Inpres desa tertinggal), (4) Perluasan kesempatan kerja.",
+                options: [
+                    "(1) dan (2)",
+                    "(2) dan (4)",
+                    "(1) dan (3)",
+                    "(3) dan (4)",
+                    "(2) dan (3)"
+                ],
+                answer: 3 // d. Note: The source gives (3) and (4) as the answer to the provided options. (Perluasan kesempatan kerja and Pelaksanaan IDT). Assuming (3) and (4) are the intended answer based on the source structure.
+            },
+            {
+                text: "Berikut ini dampak positif dari pembangunan wilayah adalah...",
+                options: [
+                    "peningkatan biaya hidup, peningkatan kemacetan lalu lintas, dan peningkatan polusi udara",
+                    "peningkatan ekonomi, peningkatan infrastruktur, peningkatan lapangan kerja, dan peningkatan kualitas hidup masyarakat",
+                    "peningkatan kriminalitas, peningkatan kemiskinan, dan peningkatan kerusakan lingkungan",
+                    "peningkatan konflik sosial, peningkatan pengangguran, dan peningkatan kesenjangan sosial",
+                    "adanya urbanisasi, timbulnya konflik sosial, dan terjadinya kesenjangan sosial"
+                ],
+                answer: 1 // b
+            },
+            {
+                text: "Pengembangan permukiman/perkotaan yang sesuai dengan konsep pembangunan berkelanjutan, seperti yang didukung 'city changer', adalah...",
+                options: [
+                    "membangun kawasan permukiman/kota yang strategis dalam berbagai industri agar masyarakat dapat membuka lapangan kerja seluas mungkin",
+                    "menciptakan kawasan permukiman/kota secara fisik dengan memperbanyak sarana prasarana perkotaan dan memperbaiki sistem layanan",
+                    "membangun kawasan permukiman/kota yang ramah lingkungan, inklusif secara sosial, efisien, dan layak yang dapat meningkatkan produktivitas",
+                    "menerapkan kawasan permukiman/kota yang sedikit memiliki ruang terbuka hijau dan memperbanyak pembangunan fisik",
+                    "membangun kawasan permukiman/kota yang aman, sehat, dan ramah lingkungan dengan memperbanyak ruang terbuka hijau"
+                ],
+                answer: 2 // c
+            },
+            {
+                text: "Hubungan antara perkembangan penduduk dengan pembangunan, yaitu...",
+                options: [
+                    "pertambahan penduduk yang cepat, usia produktif sebanding dengan ratio ketergantungan",
+                    "bertambahnya penduduk akan mendorong tingkat konsumsi yang tinggi",
+                    "dengan adanya perkembangan penduduk maka pelaksanaan pembangunan akan semakin lancar dan ramai",
+                    "dengan adanya perkembangan penduduk maka jumlah tenaga kerja bertambah dan memperluas pasar hasil produksinya",
+                    "dengan adanya perkembangan penduduk, maka program KB menjadi penting dalam pembangunan"
+                ],
+                answer: 3 // d
+            },
+            {
+                text: "Berikut ini yang merupakan pengaruh Revolusi Industri terhadap perubahan sosial adalah...",
+                options: [
+                    "Revolusi Industri memengaruhi perubahan sosial dengan mengubah cara manusia bekerja, mempercepat urbanisasi, meningkatkan standar hidup, dan struktur sosial",
+                    "Revolusi Industri hanya memengaruhi perubahan ekonomi, bukan perubahan sosial",
+                    "Revolusi Industri tidak memiliki pengaruh signifikan terhadap perubahan sosial",
+                    "Revolusi Industri hanya memengaruhi perubahan teknologi, bukan perubahan sosial",
+                    "perubahan sosial terjadi secara alami tidak dipengaruhi oleh Revolusi Industri"
+                ],
+                answer: 0 // a
+            },
+            {
+                text: "Pernyataan yang termasuk keberhasilan pembangunan ekonomi adalah: (1) Terjadinya ketimpangan distribusi pendapatan nasional, (2) Peningkatan pertumbuhan ekonomi, (3) Rendahnya penyerapan tenaga kerja, (4) Perekonomian tidak mengalami banyak guncangan, (5) Terbuka kesempatan kerja yang luas bagi angkatan kerja.",
+                options: [
+                    "(1), (2), dan (3)",
+                    "(2), (4), dan (5)",
+                    "(1), (3), dan (4)",
+                    "(3), (4), dan (5)",
+                    "(2), (3), dan (4)"
+                ],
+                answer: 1 // b (Peningkatan pertumbuhan ekonomi, Perekonomian tidak mengalami guncangan, Terbuka kesempatan kerja)
+            },
+            {
+                text: "Berikut ini yang merupakan pengaruh pembangunan wilayah terhadap perkembangan ekonomi adalah...",
+                options: [
+                    "pembangunan wilayah tidak memiliki pengaruh terhadap perkembangan ekonomi",
+                    "pembangunan wilayah dapat memengaruhi perkembangan ekonomi melalui peningkatan konektivitas, kualitas sumber daya manusia, dan penciptaan lapangan kerja",
+                    "pembangunan wilayah hanya memengaruhi perkembangan ekonomi dalam jangka pendek",
+                    "pembangunan wilayah hanya memengaruhi perkembangan ekonomi di sektor tertentu",
+                    "pembangunan wilayah tidak diperlukan dalam perkembangan ekonomi suatu wilayah"
+                ],
+                answer: 1 // b
+            },
+            {
+                text: "Berikut ini yang merupakan pengertian pembangunan wilayah adalah...",
+                options: [
+                    "upaya untuk meningkatkan kualitas dan kesejahteraan suatu wilayah melalui pembangunan bangunan tinggi dan modernisasi, tanpa memperhatikan pengembangan ekonomi dan lingkungan",
+                    "pembangunan wilayah adalah upaya untuk mengurangi kualitas dan kesejahteraan suatu wilayah melalui penghancuran infrastruktur dan pengelolaan lingkungan yang buruk",
+                    "proses penghancuran wilayah untuk kepentingan pembangunan infrastruktur yang lebih besar",
+                    "upaya untuk meningkatkan kualitas dan kesejahteraan suatu wilayah melalui pembangunan infrastruktur, pengembangan ekonomi, peningkatan sumber daya manusia, dan pengelolaan lingkungan",
+                    "upaya mengembangkan kemandirian dan kesejahteraan masyarakat dengan meningkatkan pengetahuan, sikap, dan keterampilan"
+                ],
+                answer: 3 // d
+            },
+            {
+                text: "Pernyataan yang benar mengenai Revolusi Industri adalah...",
+                options: [
+                    "periode perubahan besar dalam produksi, teknologi, dan transportasi pada abad ke-20 di Eropa dan Amerika Utara",
+                    "periode perubahan besar dalam produksi, teknologi, dan transportasi pada abad ke-18 dan ke-19 di Eropa dan Amerika Utara",
+                    "periode perubahan besar dalam produksi, teknologi, dan transportasi pada abad ke-18 dan ke-19 di Asia dan Afrika",
+                    "periode perubahan kecil dalam produksi, teknologi, dan transportasi pada abad ke-18 dan ke-19 di Eropa dan Amerika Utara",
+                    "periode perubahan kecil dalam bidang ekonomi pada abad ke-20 di Asia dan Eropa"
+                ],
+                answer: 1 // b
+            }
+        ];
+
+        const quizContainer = document.getElementById('quiz-container');
+        const questionsList = document.getElementById('questions-list');
+        const startScreen = document.getElementById('start-screen');
+        const resultScreen = document.getElementById('result-screen');
+        const attemptedMessage = document.getElementById('attempted-message');
+        const studentNameInput = document.getElementById('student-name');
+        const startQuizBtn = document.getElementById('start-quiz-btn');
+        const submitBtn = document.getElementById('submit-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const questionStatus = document.getElementById('question-status');
+        const downloadBtn = document.getElementById('download-btn');
+
+        let currentQuestionIndex = 0;
+        let userAnswers = new Array(QUESTIONS.length).fill(null);
+        let quizStartTime;
+        let isQuizSubmitted = false;
+        const ATTEMPT_KEY = 'quizAttempted';
+        const RESULTS_KEY = 'quizResults';
+
+        // --- Core Functions ---
+
+        function checkAttemptStatus() {
+            const attempted = localStorage.getItem(ATTEMPT_KEY);
+            const isAdmin = window.location.hash === '#admin'; 
+
+            if (isAdmin) {
+                // Admin/Teacher Mode: Show download button, hide quiz elements
+                startQuizBtn.style.display = 'none';
+                studentNameInput.style.display = 'none';
+                startScreen.querySelector('label').style.display = 'none';
+                downloadBtn.style.display = 'block';
+                document.querySelector('h2').textContent = 'Mode Guru: Unduh Hasil';
+            } else if (attempted === 'true') {
+                // Student already submitted: Show message
+                startScreen.style.display = 'none';
+                quizContainer.style.display = 'none';
+                resultScreen.style.display = 'none';
+                attemptedMessage.style.display = 'block';
+            } else {
+                // New student attempt: Show start screen
+                startScreen.style.display = 'block';
+                quizContainer.style.display = 'none';
+                resultScreen.style.display = 'none';
+                attemptedMessage.style.display = 'none';
+            }
+        }
+
+        function renderQuestions() {
+            questionsList.innerHTML = '';
+            QUESTIONS.forEach((q, index) => {
+                const qCard = document.createElement('div');
+                qCard.className = 'question-card';
+                qCard.id = `q-${index}`;
+                if (index === 0) qCard.classList.add('active');
+
+                let optionsHtml = '';
+                const optionLetters = ['a', 'b', 'c', 'd', 'e'];
+                q.options.forEach((option, i) => {
+                    const isChecked = userAnswers[index] === i;
+                    optionsHtml += `
+                        <label class="option">
+                            <input type="radio" name="q${index}" value="${i}" ${isChecked ? 'checked' : ''} onchange="selectAnswer(${index}, ${i})" ${isQuizSubmitted ? 'disabled' : ''}>
+                            ${optionLetters[i]}. ${option}
+                        </label>
+                    `;
+                });
+
+                qCard.innerHTML = `
+                    <div class="question-text">${index + 1}. ${q.text}</div>
+                    <div class="options-group">${optionsHtml}</div>
+                `;
+                questionsList.appendChild(qCard);
+            });
+            updateNavigation();
+        }
+
+        function selectAnswer(qIndex, answerIndex) {
+            if (isQuizSubmitted) return;
+            userAnswers[qIndex] = answerIndex;
+            updateSubmitButtonStatus();
+
+            // Automatically proceed to the next question if not the last one
+            if (qIndex < QUESTIONS.length - 1) {
+                showQuestion(qIndex + 1);
+            }
+        }
+
+        function showQuestion(index) {
+            currentQuestionIndex = index;
+            const cards = document.querySelectorAll('.question-card');
+            cards.forEach((card, i) => {
+                card.classList.remove('active');
+                if (i === index) card.classList.add('active');
+            });
+            updateNavigation();
+        }
+
+        function updateNavigation() {
+            questionStatus.textContent = `${currentQuestionIndex + 1} dari ${QUESTIONS.length}`;
+            prevBtn.disabled = currentQuestionIndex === 0 || isQuizSubmitted;
+            nextBtn.disabled = currentQuestionIndex === QUESTIONS.length - 1 || isQuizSubmitted;
+            
+            // Change Next button text to 'Kirim' on the last question
+            if (currentQuestionIndex === QUESTIONS.length - 1) {
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'inline-block';
+            } else {
+                nextBtn.style.display = 'inline-block';
+                submitBtn.style.display = 'none';
+            }
+        }
+
+        function updateSubmitButtonStatus() {
+            const allAnswered = userAnswers.every(answer => answer !== null);
+            submitBtn.disabled = !allAnswered || isQuizSubmitted;
+        }
+
+        function calculateScore() {
+            let score = 0;
+            userAnswers.forEach((answer, index) => {
+                if (answer === QUESTIONS[index].answer) {
+                    score++;
+                }
+            });
+            return score;
+        }
+
+        function submitQuiz() {
+            if (isQuizSubmitted || !userAnswers.every(answer => answer !== null)) return;
+
+            isQuizSubmitted = true;
+            const finalScore = calculateScore();
+            const quizEndTime = new Date();
+            const timeTakenMs = quizEndTime - quizStartTime;
+            const timeTakenSec = Math.floor(timeTakenMs / 1000);
+            
+            // Format time taken (H:M:S)
+            const hours = Math.floor(timeTakenSec / 3600);
+            const minutes = Math.floor((timeTakenSec % 3600) / 60);
+            const seconds = timeTakenSec % 60;
+            const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            // Save results
+            const resultData = {
+                name: studentNameInput.value,
+                score: finalScore,
+                total: QUESTIONS.length,
+                time: formattedTime,
+                date: quizEndTime.toLocaleString()
+            };
+            saveResult(resultData);
+
+            // Display results
+            quizContainer.style.display = 'none';
+            resultScreen.style.display = 'block';
+            document.getElementById('final-score').textContent = `${finalScore}/${QUESTIONS.length}`;
+
+            // Disable all buttons and inputs
+            submitBtn.disabled = true;
+            prevBtn.disabled = true;
+            nextBtn.disabled = true;
+            document.querySelectorAll('input[type="radio"]').forEach(input => input.disabled = true);
+            localStorage.setItem(ATTEMPT_KEY, 'true'); // Mark quiz as completed
+        }
+
+        function saveResult(result) {
+            let results = JSON.parse(localStorage.getItem(RESULTS_KEY) || '[]');
+            results.push(result);
+            localStorage.setItem(RESULTS_KEY, JSON.stringify(results));
+        }
+
+        // --- Event Listeners ---
+
+        studentNameInput.addEventListener('input', () => {
+            startQuizBtn.disabled = studentNameInput.value.trim() === '';
+        });
+
+        startQuizBtn.addEventListener('click', () => {
+            if (studentNameInput.value.trim() === '') return;
+            quizStartTime = new Date();
+            startScreen.style.display = 'none';
+            quizContainer.style.display = 'block';
+            renderQuestions();
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                showQuestion(currentQuestionIndex - 1);
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestionIndex < QUESTIONS.length - 1) {
+                showQuestion(currentQuestionIndex + 1);
+            }
+        });
+
+        submitBtn.addEventListener('click', submitQuiz);
+
+        downloadBtn.addEventListener('click', () => {
+            const results = JSON.parse(localStorage.getItem(RESULTS_KEY) || '[]');
+            if (results.length === 0) {
+                alert("Belum ada hasil kuis yang tersimpan.");
+                return;
+            }
+
+            let csvContent = "Nama,Skor,Waktu Selesai,Tanggal\n";
+            results.forEach(res => {
+                csvContent += `${res.name},${res.score}/${res.total},${res.time},${res.date}\n`;
+            });
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", "hasil_kuis.csv");
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            alert("Hasil kuis telah berhasil diunduh.");
+        });
+
+        // --- Initialization ---
+
+        // Check if the user has already attempted the quiz on load
+        checkAttemptStatus();
+    </script>
+</body>
+</html>
