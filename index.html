@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Revolusi Industri 4.0 & Masyarakat 5.0</title>
+    <style>
+        /* Gaya Dasar */
+        :root {
+            --primary-color: #007bff; /* Biru Cerah */
+            --secondary-color: #f8f9fa; /* Putih/Abu Muda */
+            --text-color: #343a40; /* Abu Gelap */
+            --shadow-light: rgba(0, 0, 0, 0.1);
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Container Utama */
+        .quiz-container {
+            width: 100%;
+            max-width: 700px;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px var(--shadow-light);
+            padding: 30px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        /* Header */
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+
+        /* Card Soal */
+        .question-card {
+            background: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px var(--shadow-light);
+            transition: opacity var(--transition-speed) ease-in-out, transform var(--transition-speed) ease-in-out;
+            min-height: 250px; /* Menjaga konsistensi tinggi saat transisi */
+        }
+
+        .question-card.hidden {
+            display: none;
+        }
+
+        .question-text {
+            font-size: 1.25rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        /* Opsi Jawaban */
+        .option-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .option-item {
+            margin-bottom: 10px;
+        }
+
+        .option-label {
+            display: block;
+            background: var(--secondary-color);
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background var(--transition-speed), border-color var(--transition-speed);
+            border: 2px solid transparent;
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+
+        .option-label:hover {
+            background: #e9ecef;
+            border-color: #adb5bd;
+        }
+
+        /* Gaya Saat Opsi Dipilih */
+        input[type="radio"] {
+            display: none; /* Sembunyikan radio button bawaan */
+        }
+
+        input[type="radio"]:checked + .option-label {
+            background: #d0e7ff; /* Biru Muda lembut */
+            border-color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* Kontrol Navigasi */
+        .navigation-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+        }
+
+        .nav-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color var(--transition-speed), transform 0.1s ease;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+        }
+
+        .nav-button:hover {
+            background-color: #0056b3; /* Biru Lebih Gelap */
+            transform: translateY(-2px);
+        }
+
+        .nav-button:disabled {
+            background-color: #adb5bd;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .question-counter {
+            font-weight: 500;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+
+        /* Tampilan Hasil */
+        .result-container {
+            text-align: center;
+            padding: 40px 20px;
+            border: 3px solid var(--primary-color);
+            border-radius: 15px;
+            background-color: #f1f8ff; /* Sangat Biru Muda */
+            animation: bounceIn 0.8s ease-out;
+        }
+
+        .result-container h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .final-score {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #28a745; /* Hijau untuk skor */
+            display: block;
+            margin: 20px 0;
+        }
+
+        .result-message {
+            font-size: 1.2rem;
+            color: var(--text-color);
+        }
+
+        /* Animasi */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Responsif */
+        @media (max-width: 600px) {
+            .quiz-container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .question-text {
+                font-size: 1.1rem;
+            }
+
+            .nav-button {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+
+            .navigation-controls {
+                flex-direction: column-reverse;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        <h1>Kuis: Revolusi Industri 4.0 & Masyarakat 5.0 🚀</h1>
+        
+        <div id="quiz-area">
+            </div>
+
+        <div class="navigation-controls">
+            <button id="prev-btn" class="nav-button" disabled>« Sebelumnya</button>
+            <span id="question-counter" class="question-counter">Soal 1 dari 10</span>
+            <button id="next-btn" class="nav-button">Selanjutnya »</button>
+        </div>
+
+        <div id="result-area" class="result-container hidden">
+            <h2>🎉 Kuis Selesai! 🎉</h2>
+            <span id="final-score" class="final-score"></span>
+            <p id="result-message" class="result-message"></p>
+        </div>
+
+    </div>
+
+    <script>
+        // 1. Data Soal
+        const quizData = [
+            {
+                question: "Apa konsep utama yang menjadi ciri khas Revolusi Industri 4.0?",
+                options: ["Otomatisasi Lini Produksi Massal", "Mekanisme Tenaga Uap", "Integrasi Cyber-Physical Systems (CPS) dan IoT", "Penggunaan Komputer Pribadi"],
+                answer: "Integrasi Cyber-Physical Systems (CPS) dan IoT"
+            },
+            {
+                question: "Istilah 'Cyber-Physical Systems' (CPS) dalam konteks Industri 4.0 mengacu pada apa?",
+                options: ["Sistem komputer yang terisolasi dari dunia fisik", "Sistem yang menggabungkan kemampuan komputasi dengan proses fisik", "Sistem informasi berbasis Cloud murni", "Jaringan komunikasi antar manusia saja"],
+                answer: "Sistem yang menggabungkan kemampuan komputasi dengan proses fisik"
+            },
+            {
+                question: "Apa teknologi kunci yang memungkinkan benda sehari-hari terhubung dan bertukar data di Industri 4.0?",
+                options: ["Blockchain", "Virtual Reality (VR)", "Internet of Things (IoT)", "Big Data Analytics"],
+                answer: "Internet of Things (IoT)"
+            },
+            {
+                question: "Konsep Society 5.0 (Masyarakat 5.0) pertama kali dicetuskan oleh negara mana?",
+                options: ["Jerman", "Amerika Serikat", "Jepang", "Korea Selatan"],
+                answer: "Jepang"
+            },
+            {
+                question: "Tujuan utama dari Masyarakat 5.0 adalah menciptakan masyarakat yang berpusat pada:",
+                options: ["Ekonomi digital murni", "Keseimbangan antara kemajuan ekonomi dan penyelesaian masalah sosial", "Peningkatan militer dan pertahanan", "Otomatisasi total tanpa campur tangan manusia"],
+                answer: "Keseimbangan antara kemajuan ekonomi dan penyelesaian masalah sosial"
+            },
+            {
+                question: "Dalam Masyarakat 5.0, data besar (Big Data) diolah menjadi apa untuk memberikan nilai baru?",
+                options: ["Laporan keuangan tahunan", "Nilai tambah dan solusi melalui kecerdasan buatan (AI)", "Kode program komputer", "Hanya arsip digital"],
+                answer: "Nilai tambah dan solusi melalui kecerdasan buatan (AI)"
+            },
+            {
+                question: "Berikut ini yang BUKAN merupakan pilar utama Revolusi Industri 4.0 adalah:",
+                options: ["Kecerdasan Buatan (AI)", "Cloud Computing", "Percetakan (Printing Press)", "Manufaktur Aditif (3D Printing)"],
+                answer: "Percetakan (Printing Press)"
+            },
+            {
+                question: "Apa tantangan terbesar yang dihadapi dalam penerapan Revolusi Industri 4.0 terkait keamanan?",
+                options: ["Kekurangan bahan baku", "Ancaman keamanan siber (Cybersecurity)", "Tingginya biaya listrik", "Kurangnya tenaga kerja manual"],
+                answer: "Ancaman keamanan siber (Cybersecurity)"
+            },
+            {
+                question: "Bagaimana Society 5.0 memandang peran teknologi dalam kehidupan sehari-hari?",
+                options: ["Teknologi adalah tujuan akhir", "Teknologi hanya digunakan di pabrik", "Teknologi sebagai alat untuk membuat kehidupan manusia lebih nyaman dan berkelanjutan", "Teknologi harus menggantikan semua pekerjaan manusia"],
+                answer: "Teknologi sebagai alat untuk membuat kehidupan manusia lebih nyaman dan berkelanjutan"
+            },
+            {
+                question: "Apa perbedaan mendasar antara Society 4.0 (Information Society) dan Society 5.0?",
+                options: ["4.0 fokus pada energi, 5.0 fokus pada data", "4.0 fokus pada sharing informasi, 5.0 fokus pada penciptaan nilai baru dari data besar", "4.0 berpusat pada internet, 5.0 berpusat pada robot", "Tidak ada perbedaan signifikan"],
+                answer: "4.0 fokus pada sharing informasi, 5.0 fokus pada penciptaan nilai baru dari data besar"
+            }
+        ];
+
+        // 2. Variabel Status Kuis
+        let currentQuestionIndex = 0; // Indeks soal yang sedang ditampilkan
+        let userAnswers = new Array(quizData.length).fill(null); // Array untuk menyimpan jawaban pengguna (null jika belum dijawab)
+
+        // 3. Elemen DOM
+        const quizArea = document.getElementById('quiz-area');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const questionCounter = document.getElementById('question-counter');
+        const resultArea = document.getElementById('result-area');
+        const finalScoreDisplay = document.getElementById('final-score');
+        const resultMessageDisplay = document.getElementById('result-message');
+        const totalQuestions = quizData.length;
+
+        // 4. Fungsi Utama untuk Menampilkan Soal
+        function displayQuestion() {
+            // Sembunyikan semua soal dan hasil terlebih dahulu
+            quizArea.innerHTML = '';
+            resultArea.classList.add('hidden');
+
+            const q = quizData[currentQuestionIndex];
+
+            // 4a. Buat elemen card soal
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.style.opacity = '0'; // Persiapan untuk transisi masuk
+
+            // 4b. Tambahkan teks pertanyaan
+            const qText = document.createElement('p');
+            qText.className = 'question-text';
+            qText.innerHTML = `${currentQuestionIndex + 1}. ${q.question}`;
+            card.appendChild(qText);
+
+            // 4c. Tambahkan opsi jawaban
+            const optionList = document.createElement('ul');
+            optionList.className = 'option-list';
+
+            q.options.forEach((option, index) => {
+                const li = document.createElement('li');
+                li.className = 'option-item';
+
+                const radioId = `q${currentQuestionIndex}-opt${index}`;
+
+                // Input Radio
+                const radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = `question-${currentQuestionIndex}`;
+                radio.id = radioId;
+                radio.value = option;
+                // Cek apakah opsi ini sudah pernah dipilih sebelumnya
+                if (userAnswers[currentQuestionIndex] === option) {
+                    radio.checked = true;
+                }
+                
+                // Event listener saat jawaban dipilih
+                radio.addEventListener('change', (e) => {
+                    userAnswers[currentQuestionIndex] = e.target.value; // Simpan jawaban pengguna
+                });
+
+                // Label Opsi
+                const label = document.createElement('label');
+                label.htmlFor = radioId;
+                label.className = 'option-label';
+                label.textContent = option;
+
+                li.appendChild(radio);
+                li.appendChild(label);
+                optionList.appendChild(li);
+            });
+
+            card.appendChild(optionList);
+
+            // Transisi keluar soal lama (jika ada) dan masuk soal baru
+            quizArea.style.opacity = '0';
+            setTimeout(() => {
+                quizArea.appendChild(card);
+                card.style.opacity = '1';
+                quizArea.style.opacity = '1';
+            }, 50); // Jeda singkat untuk transisi halus
+
+            // 4d. Update Tampilan Navigasi
+            updateControls();
+        }
+
+        // 5. Fungsi untuk Mengupdate Kontrol Navigasi
+        function updateControls() {
+            questionCounter.textContent = `Soal ${currentQuestionIndex + 1} dari ${totalQuestions}`;
+
+            // Atur tombol 'Sebelumnya'
+            prevBtn.disabled = currentQuestionIndex === 0;
+
+            // Atur tombol 'Selanjutnya'/'Kirim'
+            if (currentQuestionIndex === totalQuestions - 1) {
+                nextBtn.textContent = 'Kirim Jawaban ✅';
+                nextBtn.disabled = false; // Biarkan tombol terakhir selalu aktif untuk mengirim
+                nextBtn.style.backgroundColor = '#28a745'; // Hijau
+                nextBtn.style.boxShadow = '0 4px 10px rgba(40, 167, 69, 0.3)';
+            } else {
+                nextBtn.textContent = 'Selanjutnya »';
+                nextBtn.disabled = false; // Selalu aktif untuk maju
+                nextBtn.style.backgroundColor = 'var(--primary-color)';
+                nextBtn.style.boxShadow = '0 4px 10px rgba(0, 123, 255, 0.3)';
+            }
+        }
+
+        // 6. Fungsi Navigasi
+        function navigate(direction) {
+            // Transisi keluar sebelum pindah
+            quizArea.style.opacity = '0';
+            
+            setTimeout(() => {
+                if (direction === 'next') {
+                    if (currentQuestionIndex < totalQuestions - 1) {
+                        currentQuestionIndex++;
+                        displayQuestion();
+                    } else if (currentQuestionIndex === totalQuestions - 1) {
+                        // Jika sudah di soal terakhir, hitung dan tampilkan hasil
+                        calculateScore();
+                    }
+                } else if (direction === 'prev' && currentQuestionIndex > 0) {
+                    currentQuestionIndex--;
+                    displayQuestion();
+                }
+            }, 200); // Tunggu sebentar untuk transisi
+
+        }
+
+        // 7. Fungsi untuk Menghitung dan Menampilkan Skor
+        function calculateScore() {
+            let score = 0;
+            let unanswered = 0;
+
+            // Hitung skor
+            quizData.forEach((q, index) => {
+                if (userAnswers[index] === q.answer) {
+                    score++;
+                } else if (userAnswers[index] === null) {
+                    unanswered++;
+                }
+            });
+
+            // Sembunyikan area kuis dan tampilkan hasil
+            quizArea.style.display = 'none';
+            document.querySelector('.navigation-controls').style.display = 'none';
+            resultArea.classList.remove('hidden');
+
+            // Tampilkan Skor
+            finalScoreDisplay.textContent = `${score} dari ${totalQuestions}`;
+
+            // Pesan
+            if (score === totalQuestions) {
+                resultMessageDisplay.textContent = "Luar biasa! Anda menguasai penuh materi ini! 🌟";
+            } else if (score >= totalQuestions / 2) {
+                resultMessageDisplay.textContent = "Hasil yang bagus! Terus tingkatkan pemahaman Anda. 👍";
+            } else {
+                resultMessageDisplay.textContent = "Terus semangat belajar! Anda perlu meninjau kembali materi Revolusi Industri 4.0 dan Masyarakat 5.0. 📚";
+            }
+        }
+
+        // 8. Event Listeners
+        nextBtn.addEventListener('click', () => navigate('next'));
+        prevBtn.addEventListener('click', () => navigate('prev'));
+
+        // 9. Inisialisasi Kuis
+        document.addEventListener('DOMContentLoaded', displayQuestion);
+
+    </script>
+</body>
+</html>
