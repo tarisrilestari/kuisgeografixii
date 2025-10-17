@@ -1,0 +1,1157 @@
+Sangat menarik\! Saya akan membuatkan Anda kode lengkap untuk aplikasi kuis interaktif berbasis web (HTML, CSS, dan JavaScript) sesuai dengan semua ketentuan yang Anda minta, termasuk soal dan jawaban yang diambil dari dokumen Anda.
+
+Berikut adalah kode untuk tiga file yang Anda butuhkan: `index.html`, `style.css`, dan `script.js`.
+
+-----
+
+## 1\. Soal Kuis dan Kunci Jawaban
+
+Berdasarkan dokumen yang Anda berikan, berikut adalah 20 soal pilihan ganda beserta kunci jawabannya:
+
+```javascript
+// Data Soal
+const quizQuestions = [
+    {
+        question: "Pembangunan adalah proses perubahan yang bertujuan untuk...",
+        options: [
+            "meningkatkan kesejahteraan masyarakat di bidang ekonomi saja",
+            "mempercepat pertumbuhan ekonomi dengan mengabaikan aspek sosial",
+            "meningkatkan kualitas hidup masyarakat di berbagai aspek secara berkelanjutan",
+            "meningkatkan pendapatan negara tanpa memperhatikan lingkungan",
+            "menurunkan pendapatan negara"
+        ],
+        answer: "meningkatkan kualitas hidup masyarakat di berbagai aspek secara berkelanjutan"
+    },
+    {
+        question: "Salah satu indikator utama dalam mengukur keberhasilan pembangunan yang mencakup aspek kesehatan, pendidikan, dan pendapatan adalah...",
+        options: [
+            "produk domestik bruto (PDB)",
+            "indeks harga konsumen",
+            "indeks pembangunan manusia (IPM)",
+            "indeks kesejahteraan",
+            "indeks persepsi korupsi"
+        ],
+        answer: "indeks pembangunan manusia (IPM)"
+    },
+    {
+        question: "Pembangunan yang menggunakan konsep ekonomi sirkular bertujuan untuk...",
+        options: [
+            "membuang limbah dengan lebih cepat",
+            "menggunakan kembali dan mendaur ulang produk untuk mengurangi penggunaan sumber daya alam",
+            "menciptakan lebih banyak produk sekali pakai",
+            "meningkatkan ketergantungan pada sumber daya non-terbarukan",
+            "meningkatkan sumber daya manusia"
+        ],
+        answer: "menggunakan kembali dan mendaur ulang produk untuk mengurangi penggunaan sumber daya alam"
+    },
+    {
+        question: "Berikut ini yang merupakan indikator kesejahteraan sosial dalam pembangunan adalah...",
+        options: [
+            "tingkat pengangguran",
+            "jumlah ekspor dan impor",
+            "tingkat pencemaran udara",
+            "tingkat kelahiran",
+            "jumlah pendapatan nasional"
+        ],
+        answer: "tingkat kelahiran" // Catatan: tingkat kelahiran sering digunakan sebagai proksi kesehatan dan kesejahteraan sosial/pendidikan
+    },
+    {
+        question: "Revolusi Industri 4.0 adalah era yang ditandai dengan...",
+        options: [
+            "penggunaan tenaga uap sebagai penggerak utama mesin",
+            "integrasi teknologi digital, kecerdasan buatan, dan Internet of Things dalam berbagai sektor",
+            "peralihan dari mesin mekanik ke listrik",
+            "peningkatan kapasitas produksi industri secara manual",
+            "penggabungan teknologi digital dan mesin penggerak"
+        ],
+        answer: "integrasi teknologi digital, kecerdasan buatan, dan Internet of Things dalam berbagai sektor"
+    },
+    {
+        question: "Teknologi yang paling berperan dalam mendukung implementasi Masyarakat 5.0 adalah...",
+        options: [
+            "teknologi cetak manual",
+            "teknologi pertanian tradisional",
+            "kecerdasan buatan (AI) dan big data",
+            "sumber daya manusia tanpa teknologi",
+            "teknologi berkelanjutan"
+        ],
+        answer: "kecerdasan buatan (AI) dan big data"
+    },
+    {
+        question: "Salah satu tantangan yang muncul akibat Revolusi Industri 4.0 adalah...",
+        options: [
+            "meningkatnya lapangan pekerjaan tanpa keahlian khusus",
+            "ketidaksetaraan kesempatan kerja karena automasi menggantikan pekerjaan manusia",
+            "meningkatnya biaya produksi secara drastis",
+            "meningkatnya keterampilan masyarakat tanpa pelatihan tambahan",
+            "penurunan tenaga kerja produktif"
+        ],
+        answer: "ketidaksetaraan kesempatan kerja karena automasi menggantikan pekerjaan manusia"
+    },
+    {
+        question: "Dalam konsep Masyarakat 5.0, teknologi seperti kecerdasan buatan dan robotika digunakan untuk...",
+        options: [
+            "menggantikan semua pekerjaan manusia di bidang jasa",
+            "memecahkan masalah sosial seperti kesehatan, pendidikan, dan transportasi",
+            "menghilangkan kebutuhan manusia akan tenaga kerja manual",
+            "meningkatkan keuntungan perusahaan sebesar-besarnya",
+            "meningkatkan pendapatan perkapita"
+        ],
+        answer: "memecahkan masalah sosial seperti kesehatan, pendidikan, dan transportasi"
+    },
+    {
+        question: "Salah satu manfaat utama teknologi Internet of Things (IoT) dalam Revolusi Industri 4.0 adalah...",
+        options: [
+            "mengurangi jumlah data yang dibutuhkan",
+            "menghubungkan perangkat secara real-time untuk meningkatkan efisiensi dan produktivitas",
+            "menurunkan biaya tenaga kerja tanpa mengoptimalkan proses",
+            "mengganti semua tenaga kerja manusia tanpa pelatihan",
+            "menurunkan produktivitas pekerja"
+        ],
+        answer: "menghubungkan perangkat secara real-time untuk meningkatkan efisiensi dan produktivitas"
+    },
+    {
+        question: "Fokus utama Masyarakat 5.0 adalah menciptakan masyarakat yang...",
+        options: [
+            "terlalu bergantung pada teknologi tanpa interaksi sosial",
+            "seimbang antara ekonomi, teknologi, dan kesejahteraan sosial",
+            "hanya mengejar keuntungan teknologi dan ekonomi",
+            "mengabaikan aspek sosial dalam perkembangan teknologi",
+            "berfokus pada kemajuan teknologi"
+        ],
+        answer: "seimbang antara ekonomi, teknologi, dan kesejahteraan sosial"
+    },
+    {
+        question: "Tindakan yang mencerminkan pembangunan berkelanjutan ditunjukkan oleh nomor (1) Menggunakan teknologi yang tidak ramah lingkungan; (2) Menggunakan bahan tambang sebanyak-banyaknya; (3) Reklamasi dan rehabilitasi lahan kritis; (4) Pengembangan dan pengelolaan keanekaragaman hayati...",
+        options: [
+            "(3) dan (4)",
+            "(1) dan (2)",
+            "(2) dan (3)",
+            "(1) dan (3)",
+            "(2) dan (4)"
+        ],
+        answer: "(3) dan (4)"
+    },
+    {
+        question: "Upaya-upaya yang dilakukan oleh pemerintah dalam mengatasi permasalahan pembangunan ekonomi ditunjukkan nomor (1) Penyediaan kebutuhan pokok untuk keluarga miskin; (2) Pengembangan sistem jaminan sosial; (3) Pelaksanaan IDT (Inpres desa tertinggal); (4) Perluasan kesempatan kerja...",
+        options: [
+            "(1) dan (2)",
+            "(2) dan (4)",
+            "(1) dan (3)",
+            "(3) dan (4)",
+            "(2) dan (3)"
+        ],
+        answer: "(2) dan (4)" // Catatan: Soal aslinya ada di opsi E. (2) dan (3), namun (2) dan (4) lebih tepat sebagai upaya mengatasi masalah pembangunan ekonomi (jaminan sosial dan kesempatan kerja). Mengikuti kunci yang ada: (2) dan (3).
+    },
+    {
+        question: "Berikut ini dampak positif dari pembangunan wilayah adalah...",
+        options: [
+            "peningkatan biaya hidup, peningkatan kemacetan lalu lintas, dan peningkatan polusi udara",
+            "peningkatan ekonomi, peningkatan infrastruktur, peningkatan lapangan kerja, dan peningkatan kualitas hidup masyarakat",
+            "peningkatan kriminalitas, peningkatan kemiskinan, dan peningkatan kerusakan lingkungan",
+            "peningkatan konflik sosial, peningkatan pengangguran, dan peningkatan kesenjangan sosial",
+            "adanya urbanisasi, timbulnya konflik sosial, dan terjadinya kesenjangan sosial"
+        ],
+        answer: "peningkatan ekonomi, peningkatan infrastruktur, peningkatan lapangan kerja, dan peningkatan kualitas hidup masyarakat"
+    },
+    {
+        question: "Pengembangan permukiman/perkotaan yang sesuai dengan konsep pembangunan berkelanjutan adalah...",
+        options: [
+            "membangun kawasan permukiman/kota yang strategis dalam berbagai industri agar masyarakat dapat membuka lapangan kerja seluas mungkin",
+            "menciptakan kawasan permukiman/kota secara fisik dengan memperbanyak sarana prasarana perkotaan dan memperbaiki sistem layanan",
+            "membangun kawasan permukiman/kota yang ramah lingkungan, inklusif secara sosial, efisien, dan layak yang dapat meningkatkan produktivitas",
+            "menerapkan kawasan permukiman/kota yang sedikit memiliki ruang terbuka hijau dan memperbanyak pembangunan fisik",
+            "membangun kawasan permukiman/kota yang aman, sehat, dan ramah lingkungan dengan memperbanyak ruang terbuka hijau"
+        ],
+        answer: "membangun kawasan permukiman/kota yang ramah lingkungan, inklusif secara sosial, efisien, dan layak yang dapat meningkatkan produktivitas"
+    },
+    {
+        question: "Hubungan antara perkembangan penduduk dengan pembangunan, yaitu...",
+        options: [
+            "pertambahan penduduk yang cepat, usia produktif sebanding dengan ratio ketergantungan",
+            "bertambahnya penduduk akan mendorong tingkat konsumsi yang tinggi",
+            "dengan adanya perkembangan penduduk maka pelaksanaan pembangunan akan semakin lancar dan ramai",
+            "dengan adanya perkembangan penduduk maka jumlah tenaga kerja bertambah dan memperluas pasar hasil produksinya",
+            "dengan adanya perkembangan penduduk, maka program KB menjadi penting dalam pembangunan"
+        ],
+        answer: "dengan adanya perkembangan penduduk maka jumlah tenaga kerja bertambah dan memperluas pasar hasil produksinya"
+    },
+    {
+        question: "Berikut ini yang merupakan pengaruh Revolusi Industri terhadap perubahan sosial adalah...",
+        options: [
+            "Revolusi Industri memengaruhi perubahan sosial dengan mengubah cara manusia bekerja, mempercepat urbanisasi, meningkatkan standar hidup, dan struktur sosial",
+            "Revolusi Industri hanya memengaruhi perubahan ekonomi, bukan perubahan sosial",
+            "Revolusi Industri tidak memiliki pengaruh signifikan terhadap perubahan sosial",
+            "Revolusi Industri hanya memengaruhi perubahan teknologi, bukan perubahan sosial",
+            "perubahan sosial terjadi secara alami tidak dipengaruhi oleh Revolusi Industri"
+        ],
+        answer: "Revolusi Industri memengaruhi perubahan sosial dengan mengubah cara manusia bekerja, mempercepat urbanisasi, meningkatkan standar hidup, dan struktur sosial"
+    },
+    {
+        question: "Pernyataan yang termasuk keberhasilan pembangunan ekonomi, yaitu (1) Terjadinya ketimpangan distribusi pendapatan nasional; (2) Peningkatan pertumbuhan ekonomi; (3) Rendahnya penyerapan tenaga kerja; (4) Perekonomian tidak mengalami banyak guncangan; (5) Terbuka kesempatan kerja yang luas bagi angkatan kerja...",
+        options: [
+            "(1), (2), dan (3)",
+            "(2), (4), dan (5)",
+            "(1), (3), dan (4)",
+            "(3), (4), dan (5)",
+            "(2), (3), dan (4)"
+        ],
+        answer: "(2), (4), dan (5)"
+    },
+    {
+        question: "Berikut ini yang merupakan pengaruh pembangunan wilayah terhadap perkembangan ekonomi adalah...",
+        options: [
+            "pembangunan wilayah tidak memiliki pengaruh terhadap perkembangan ekonomi",
+            "pembangunan wilayah dapat memengaruhi perkembangan ekonomi melalui peningkatan konektivitas, kualitas sumber daya manusia, dan penciptaan lapangan kerja",
+            "pembangunan wilayah hanya memengaruhi perkembangan ekonomi dalam jangka pendek",
+            "pembangunan wilayah hanya memengaruhi perkembangan ekonomi di sektor tertentu",
+            "pembangunan wilayah tidak diperlukan dalam perkembangan ekonomi suatu wilayah"
+        ],
+        answer: "pembangunan wilayah dapat memengaruhi perkembangan ekonomi melalui peningkatan konektivitas, kualitas sumber daya manusia, dan penciptaan lapangan kerja"
+    },
+    {
+        question: "Berikut ini yang merupakan pengertian pembangunan wilayah adalah...",
+        options: [
+            "upaya untuk meningkatkan kualitas dan kesejahteraan suatu wilayah melalui pembangunan bangunan tinggi dan modernisasi, tanpa memperhatikan pengembangan ekonomi dan lingkungan",
+            "pembangunan wilayah adalah upaya untuk mengurangi kualitas dan kesejahteraan suatu wilayah melalui penghancuran infrastruktur dan pengelolaan lingkungan yang buruk",
+            "proses penghancuran wilayah untuk kepentingan pembangunan infrastruktur yang lebih besar",
+            "upaya untuk meningkatkan kualitas dan kesejahteraan suatu wilayah melalui pembangunan infrastruktur, pengembangan ekonomi, peningkatan sumber daya manusia, dan pengelolaan lingkungan",
+            "upaya mengembangkan kemandirian dan kesejahteraan masyarakat dengan meningkatkan pengetahuan, sikap, dan keterampilan"
+        ],
+        answer: "upaya untuk meningkatkan kualitas dan kesejahteraan suatu wilayah melalui pembangunan infrastruktur, pengembangan ekonomi, peningkatan sumber daya manusia, dan pengelolaan lingkungan"
+    },
+    {
+        question: "Pernyataan yang benar mengenai Revolusi Industri adalah...",
+        options: [
+            "periode perubahan besar dalam produksi, teknologi, dan transportasi pada abad ke-20 di Eropa dan Amerika Utara",
+            "periode perubahan besar dalam produksi, teknologi, dan transportasi pada abad ke-18 dan ke-19 di Eropa dan Amerika Utara",
+            "periode perubahan besar dalam produksi, teknologi, dan transportasi pada abad ke-18 dan ke-19 di Asia dan Afrika",
+            "periode perubahan kecil dalam produksi, teknologi, dan transportasi pada abad ke-18 dan ke-19 di Eropa dan Amerika Utara",
+            "periode perubahan kecil dalam bidang ekonomi pada abad ke-20 di Asia dan Eropa"
+        ],
+        answer: "periode perubahan besar dalam produksi, teknologi, dan transportasi pada abad ke-18 dan ke-19 di Eropa dan Amerika Utara"
+    }
+];
+
+// ... kode JavaScript selanjutnya (di bagian 3)
+```
+
+-----
+
+## 2\. `index.html` (Struktur Halaman)
+
+Simpan kode ini sebagai **`index.html`**.
+
+```html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Interaktif Geografi SMA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Kuis Perkembangan Wilayah, Revolusi Industri, dan Pengaruhnya</h1>
+        </header>
+
+        <div id="quiz-start-screen" class="card">
+            <h2>Selamat Datang!</h2>
+            <p>Kuis ini terdiri dari 20 soal pilihan ganda. Kerjakan dengan teliti.</p>
+            <p class="warning-text">⚠️ Kuis hanya bisa dikerjakan **satu kali** per perangkat.</p>
+            <label for="student-name">Masukkan Nama Lengkap Anda:</label>
+            <input type="text" id="student-name" placeholder="Contoh: Budi Santoso" required>
+            <button id="start-quiz-btn" class="primary-btn" disabled>Mulai Kuis</button>
+        </div>
+
+        <div id="quiz-active-area" style="display: none;">
+            <div id="quiz-progress-bar">
+                <span id="question-indicator">1 dari 20</span>
+                <div id="progress-container">
+                    <div id="progress-fill"></div>
+                </div>
+            </div>
+
+            <div id="question-card" class="card">
+                </div>
+
+            <div id="navigation-controls">
+                <button id="prev-btn" class="secondary-btn" disabled>← Sebelumnya</button>
+                <button id="next-btn" class="primary-btn">Selanjutnya →</button>
+                <button id="submit-btn" class="submit-btn" style="display: none;">Kirim Jawaban</button>
+            </div>
+        </div>
+        
+        <div id="quiz-result-screen" class="card" style="display: none;">
+            </div>
+
+        <div id="admin-panel" class="card" style="display: none;">
+            <h3>Mode Guru (Admin)</h3>
+            <p>Untuk melihat dan mengunduh hasil kuis.</p>
+            <button id="download-results-btn" class="primary-btn">Download Hasil Kuis (.csv)</button>
+            <button id="reset-results-btn" class="secondary-btn" style="background-color: #f44336; color: white;">Reset Semua Hasil</button>
+        </div>
+        
+        <div id="already-completed-screen" class="card" style="display: none;">
+            <h2>Kuis Selesai</h2>
+            <p>Kamu sudah menyelesaikan kuis ini. Terima kasih! 🙏</p>
+        </div>
+        
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+```
+
+-----
+
+## 3\. `style.css` (Desain Tampilan)
+
+Simpan kode ini sebagai **`style.css`**.
+
+```css
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f8fb; /* Biru-putih lembut */
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.container {
+    width: 100%;
+    max-width: 700px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+h1 {
+    color: #007bff; /* Biru edukatif */
+    font-weight: 700;
+    font-size: 1.8rem;
+    line-height: 1.3;
+}
+
+h2 {
+    color: #333;
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+.card {
+    background-color: #ffffff;
+    padding: 30px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Input & Label */
+label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #555;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+.warning-text {
+    color: #f44336;
+    font-weight: 600;
+}
+
+/* Tombol */
+button {
+    padding: 12px 20px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.primary-btn {
+    background-color: #007bff;
+    color: white;
+}
+
+.primary-btn:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+.secondary-btn {
+    background-color: #e9ecef;
+    color: #333;
+}
+
+.secondary-btn:hover:not(:disabled) {
+    background-color: #ced4da;
+}
+
+.submit-btn {
+    background-color: #28a745; /* Hijau */
+    color: white;
+}
+
+.submit-btn:hover:not(:disabled) {
+    background-color: #1e7e34;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+#navigation-controls {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 10px;
+}
+
+/* Opsi Jawaban (Radio Buttons) */
+.option {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 8px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+    user-select: none;
+}
+
+.option:hover {
+    background-color: #f7f7f7;
+    border-color: #007bff;
+}
+
+.option input[type="radio"] {
+    margin-right: 15px;
+    /* Menyembunyikan radio button bawaan, kita akan mendesain custom */
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.option-label {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.custom-radio {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #aaa;
+    border-radius: 50%;
+    margin-right: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: border-color 0.2s;
+    flex-shrink: 0;
+}
+
+.custom-radio::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #007bff;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.option input[type="radio"]:checked + .option-label .custom-radio {
+    border-color: #007bff;
+}
+
+.option input[type="radio"]:checked + .option-label .custom-radio::after {
+    opacity: 1;
+}
+
+/* Indikator Progres */
+#quiz-progress-bar {
+    margin-bottom: 15px;
+}
+
+#question-indicator {
+    font-weight: 600;
+    color: #007bff;
+    display: block;
+    margin-bottom: 5px;
+}
+
+#progress-container {
+    height: 8px;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+#progress-fill {
+    height: 100%;
+    width: 0%;
+    background-color: #28a745; /* Hijau */
+    transition: width 0.4s ease-in-out;
+}
+
+/* Hasil Kuis */
+#quiz-result-screen h2 {
+    color: #28a745;
+    border-bottom: 2px solid #28a745;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+#quiz-result-screen p {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.score-display {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #007bff;
+    margin: 15px 0;
+    text-align: center;
+}
+
+/* Animasi Perpindahan Soal */
+.fade-out {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.fade-in {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.3s, transform 0.3s;
+}
+```
+
+-----
+
+## 4\. `script.js` (Logika Kuis)
+
+Simpan kode ini sebagai **`script.js`**.
+
+```javascript
+// =========================================================
+// 1. DATA SOAL
+// =========================================================
+
+const quizQuestions = [
+    {
+        question: "Pembangunan adalah proses perubahan yang bertujuan untuk...",
+        options: [
+            "meningkatkan kesejahteraan masyarakat di bidang ekonomi saja",
+            "mempercepat pertumbuhan ekonomi dengan mengabaikan aspek sosial",
+            "meningkatkan kualitas hidup masyarakat di berbagai aspek secara berkelanjutan",
+            "meningkatkan pendapatan negara tanpa memperhatikan lingkungan",
+            "menurunkan pendapatan negara"
+        ],
+        answer: "meningkatkan kualitas hidup masyarakat di berbagai aspek secara berkelanjutan"
+    },
+    {
+        question: "Salah satu indikator utama dalam mengukur keberhasilan pembangunan yang mencakup aspek kesehatan, pendidikan, dan pendapatan adalah...",
+        options: [
+            "produk domestik bruto (PDB)",
+            "indeks harga konsumen",
+            "indeks pembangunan manusia (IPM)",
+            "indeks kesejahteraan",
+            "indeks persepsi korupsi"
+        ],
+        answer: "indeks pembangunan manusia (IPM)"
+    },
+    {
+        question: "Pembangunan yang menggunakan konsep ekonomi sirkular bertujuan untuk...",
+        options: [
+            "membuang limbah dengan lebih cepat",
+            "menggunakan kembali dan mendaur ulang produk untuk mengurangi penggunaan sumber daya alam",
+            "menciptakan lebih banyak produk sekali pakai",
+            "meningkatkan ketergantungan pada sumber daya non-terbarukan",
+            "meningkatkan sumber daya manusia"
+        ],
+        answer: "menggunakan kembali dan mendaur ulang produk untuk mengurangi penggunaan sumber daya alam"
+    },
+    {
+        question: "Berikut ini yang merupakan indikator kesejahteraan sosial dalam pembangunan adalah...",
+        options: [
+            "tingkat pengangguran",
+            "jumlah ekspor dan impor",
+            "tingkat pencemaran udara",
+            "tingkat kelahiran",
+            "jumlah pendapatan nasional"
+        ],
+        answer: "tingkat kelahiran"
+    },
+    {
+        question: "Revolusi Industri 4.0 adalah era yang ditandai dengan...",
+        options: [
+            "penggunaan tenaga uap sebagai penggerak utama mesin",
+            "integrasi teknologi digital, kecerdasan buatan, dan Internet of Things dalam berbagai sektor",
+            "peralihan dari mesin mekanik ke listrik",
+            "peningkatan kapasitas produksi industri secara manual",
+            "penggabungan teknologi digital dan mesin penggerak"
+        ],
+        answer: "integrasi teknologi digital, kecerdasan buatan, dan Internet of Things dalam berbagai sektor"
+    },
+    {
+        question: "Teknologi yang paling berperan dalam mendukung implementasi Masyarakat 5.0 adalah...",
+        options: [
+            "teknologi cetak manual",
+            "teknologi pertanian tradisional",
+            "kecerdasan buatan (AI) dan big data",
+            "sumber daya manusia tanpa teknologi",
+            "teknologi berkelanjutan"
+        ],
+        answer: "kecerdasan buatan (AI) dan big data"
+    },
+    {
+        question: "Salah satu tantangan yang muncul akibat Revolusi Industri 4.0 adalah...",
+        options: [
+            "meningkatnya lapangan pekerjaan tanpa keahlian khusus",
+            "ketidaksetaraan kesempatan kerja karena automasi menggantikan pekerjaan manusia",
+            "meningkatnya biaya produksi secara drastis",
+            "meningkatnya keterampilan masyarakat tanpa pelatihan tambahan",
+            "penurunan tenaga kerja produktif"
+        ],
+        answer: "ketidaksetaraan kesempatan kerja karena automasi menggantikan pekerjaan manusia"
+    },
+    {
+        question: "Dalam konsep Masyarakat 5.0, teknologi seperti kecerdasan buatan dan robotika digunakan untuk...",
+        options: [
+            "menggantikan semua pekerjaan manusia di bidang jasa",
+            "memecahkan masalah sosial seperti kesehatan, pendidikan, dan transportasi",
+            "menghilangkan kebutuhan manusia akan tenaga kerja manual",
+            "meningkatkan keuntungan perusahaan sebesar-besarnya",
+            "meningkatkan pendapatan perkapita"
+        ],
+        answer: "memecahkan masalah sosial seperti kesehatan, pendidikan, dan transportasi"
+    },
+    {
+        question: "Salah satu manfaat utama teknologi Internet of Things (IoT) dalam Revolusi Industri 4.0 adalah...",
+        options: [
+            "mengurangi jumlah data yang dibutuhkan",
+            "menghubungkan perangkat secara real-time untuk meningkatkan efisiensi dan produktivitas",
+            "menurunkan biaya tenaga kerja tanpa mengoptimalkan proses",
+            "mengganti semua tenaga kerja manusia tanpa pelatihan",
+            "menurunkan produktivitas pekerja"
+        ],
+        answer: "menghubungkan perangkat secara real-time untuk meningkatkan efisiensi dan produktivitas"
+    },
+    {
+        question: "Fokus utama Masyarakat 5.0 adalah menciptakan masyarakat yang...",
+        options: [
+            "terlalu bergantung pada teknologi tanpa interaksi sosial",
+            "seimbang antara ekonomi, teknologi, dan kesejahteraan sosial",
+            "hanya mengejar keuntungan teknologi dan ekonomi",
+            "mengabaikan aspek sosial dalam perkembangan teknologi",
+            "berfokus pada kemajuan teknologi"
+        ],
+        answer: "seimbang antara ekonomi, teknologi, dan kesejahteraan sosial"
+    },
+    {
+        question: "Tindakan yang mencerminkan pembangunan berkelanjutan ditunjukkan oleh nomor (1) Menggunakan teknologi yang tidak ramah lingkungan; (2) Menggunakan bahan tambang sebanyak-banyaknya; (3) Reklamasi dan rehabilitasi lahan kritis; (4) Pengembangan dan pengelolaan keanekaragaman hayati...",
+        options: [
+            "(3) dan (4)",
+            "(1) dan (2)",
+            "(2) dan (3)",
+            "(1) dan (3)",
+            "(2) dan (4)"
+        ],
+        answer: "(3) dan (4)"
+    },
+    {
+        question: "Upaya-upaya yang dilakukan oleh pemerintah dalam mengatasi permasalahan pembangunan ekonomi ditunjukkan nomor (1) Penyediaan kebutuhan pokok untuk keluarga miskin; (2) Pengembangan sistem jaminan sosial; (3) Pelaksanaan IDT (Inpres desa tertinggal); (4) Perluasan kesempatan kerja...",
+        options: [
+            "(1) dan (2)",
+            "(2) dan (4)",
+            "(1) dan (3)",
+            "(3) dan (4)",
+            "(2) dan (3)"
+        ],
+        answer: "(2) dan (3)" 
+    },
+    {
+        question: "Berikut ini dampak positif dari pembangunan wilayah adalah...",
+        options: [
+            "peningkatan biaya hidup, peningkatan kemacetan lalu lintas, dan peningkatan polusi udara",
+            "peningkatan ekonomi, peningkatan infrastruktur, peningkatan lapangan kerja, dan peningkatan kualitas hidup masyarakat",
+            "peningkatan kriminalitas, peningkatan kemiskinan, dan peningkatan kerusakan lingkungan",
+            "peningkatan konflik sosial, peningkatan pengangguran, dan peningkatan kesenjangan sosial",
+            "adanya urbanisasi, timbulnya konflik sosial, dan terjadinya kesenjangan sosial"
+        ],
+        answer: "peningkatan ekonomi, peningkatan infrastruktur, peningkatan lapangan kerja, dan peningkatan kualitas hidup masyarakat"
+    },
+    {
+        question: "Pengembangan permukiman/perkotaan yang sesuai dengan konsep pembangunan berkelanjutan adalah...",
+        options: [
+            "membangun kawasan permukiman/kota yang strategis dalam berbagai industri agar masyarakat dapat membuka lapangan kerja seluas mungkin",
+            "menciptakan kawasan permukiman/kota secara fisik dengan memperbanyak sarana prasarana perkotaan dan memperbaiki sistem layanan",
+            "membangun kawasan permukiman/kota yang ramah lingkungan, inklusif secara sosial, efisien, dan layak yang dapat meningkatkan produktivitas",
+            "menerapkan kawasan permukiman/kota yang sedikit memiliki ruang terbuka hijau dan memperbanyak pembangunan fisik",
+            "membangun kawasan permukiman/kota yang aman, sehat, dan ramah lingkungan dengan memperbanyak ruang terbuka hijau"
+        ],
+        answer: "membangun kawasan permukiman/kota yang ramah lingkungan, inklusif secara sosial, efisien, dan layak yang dapat meningkatkan produktivitas"
+    },
+    {
+        question: "Hubungan antara perkembangan penduduk dengan pembangunan, yaitu...",
+        options: [
+            "pertambahan penduduk yang cepat, usia produktif sebanding dengan ratio ketergantungan",
+            "bertambahnya penduduk akan mendorong tingkat konsumsi yang tinggi",
+            "dengan adanya perkembangan penduduk maka pelaksanaan pembangunan akan semakin lancar dan ramai",
+            "dengan adanya perkembangan penduduk maka jumlah tenaga kerja bertambah dan memperluas pasar hasil produksinya",
+            "dengan adanya perkembangan penduduk, maka program KB menjadi penting dalam pembangunan"
+        ],
+        answer: "dengan adanya perkembangan penduduk maka jumlah tenaga kerja bertambah dan memperluas pasar hasil produksinya"
+    },
+    {
+        question: "Berikut ini yang merupakan pengaruh Revolusi Industri terhadap perubahan sosial adalah...",
+        options: [
+            "Revolusi Industri memengaruhi perubahan sosial dengan mengubah cara manusia bekerja, mempercepat urbanisasi, meningkatkan standar hidup, dan struktur sosial",
+            "Revolusi Industri hanya memengaruhi perubahan ekonomi, bukan perubahan sosial",
+            "Revolusi Industri tidak memiliki pengaruh signifikan terhadap perubahan sosial",
+            "Revolusi Industri hanya memengaruhi perubahan teknologi, bukan perubahan sosial",
+            "perubahan sosial terjadi secara alami tidak dipengaruhi oleh Revolusi Industri"
+        ],
+        answer: "Revolusi Industri memengaruhi perubahan sosial dengan mengubah cara manusia bekerja, mempercepat urbanisasi, meningkatkan standar hidup, dan struktur sosial"
+    },
+    {
+        question: "Pernyataan yang termasuk keberhasilan pembangunan ekonomi, yaitu (1) Terjadinya ketimpangan distribusi pendapatan nasional; (2) Peningkatan pertumbuhan ekonomi; (3) Rendahnya penyerapan tenaga kerja; (4) Perekonomian tidak mengalami banyak guncangan; (5) Terbuka kesempatan kerja yang luas bagi angkatan kerja...",
+        options: [
+            "(1), (2), dan (3)",
+            "(2), (4), dan (5)",
+            "(1), (3), dan (4)",
+            "(3), (4), dan (5)",
+            "(2), (3), dan (4)"
+        ],
+        answer: "(2), (4), dan (5)"
+    },
+    {
+        question: "Berikut ini yang merupakan pengaruh pembangunan wilayah terhadap perkembangan ekonomi adalah...",
+        options: [
+            "pembangunan wilayah tidak memiliki pengaruh terhadap perkembangan ekonomi",
+            "pembangunan wilayah dapat memengaruhi perkembangan ekonomi melalui peningkatan konektivitas, kualitas sumber daya manusia, dan penciptaan lapangan kerja",
+            "pembangunan wilayah hanya memengaruhi perkembangan ekonomi dalam jangka pendek",
+            "pembangunan wilayah hanya memengaruhi perkembangan ekonomi di sektor tertentu",
+            "pembangunan wilayah tidak diperlukan dalam perkembangan ekonomi suatu wilayah"
+        ],
+        answer: "pembangunan wilayah dapat memengaruhi perkembangan ekonomi melalui peningkatan konektivitas, kualitas sumber daya manusia, dan penciptaan lapangan kerja"
+    },
+    {
+        question: "Berikut ini yang merupakan pengertian pembangunan wilayah adalah...",
+        options: [
+            "upaya untuk meningkatkan kualitas dan kesejahteraan suatu wilayah melalui pembangunan bangunan tinggi dan modernisasi, tanpa memperhatikan pengembangan ekonomi dan lingkungan",
+            "pembangunan wilayah adalah upaya untuk mengurangi kualitas dan kesejahteraan suatu wilayah melalui penghancuran infrastruktur dan pengelolaan lingkungan yang buruk",
+            "proses penghancuran wilayah untuk kepentingan pembangunan infrastruktur yang lebih besar",
+            "upaya untuk meningkatkan kualitas dan kesejahteraan suatu wilayah melalui pembangunan infrastruktur, pengembangan ekonomi, peningkatan sumber daya manusia, dan pengelolaan lingkungan",
+            "upaya mengembangkan kemandirian dan kesejahteraan masyarakat dengan meningkatkan pengetahuan, sikap, dan keterampilan"
+        ],
+        answer: "upaya untuk meningkatkan kualitas dan kesejahteraan suatu wilayah melalui pembangunan infrastruktur, pengembangan ekonomi, peningkatan sumber daya manusia, dan pengelolaan lingkungan"
+    },
+    {
+        question: "Pernyataan yang benar mengenai Revolusi Industri adalah...",
+        options: [
+            "periode perubahan besar dalam produksi, teknologi, dan transportasi pada abad ke-20 di Eropa dan Amerika Utara",
+            "periode perubahan besar dalam produksi, teknologi, dan transportasi pada abad ke-18 dan ke-19 di Eropa dan Amerika Utara",
+            "periode perubahan besar dalam produksi, teknologi, dan transportasi pada abad ke-18 dan ke-19 di Asia dan Afrika",
+            "periode perubahan kecil dalam produksi, teknologi, dan transportasi pada abad ke-18 dan ke-19 di Eropa dan Amerika Utara",
+            "periode perubahan kecil dalam bidang ekonomi pada abad ke-20 di Asia dan Eropa"
+        ],
+        answer: "periode perubahan besar dalam produksi, teknologi, dan transportasi pada abad ke-18 dan ke-19 di Eropa dan Amerika Utara"
+    }
+];
+
+// =========================================================
+// 2. VARIABEL GLOBAL DAN LOCAL STORAGE KEY
+// =========================================================
+
+let currentQuestionIndex = 0;
+let userAnswers = new Array(quizQuestions.length).fill(null);
+let startTime = 0;
+let quizCompleted = localStorage.getItem('quizCompleted') === 'true';
+
+const RESULTS_STORAGE_KEY = 'quizResults_Geografi_Bab2';
+const COMPLETED_STORAGE_KEY = 'quizCompleted';
+const NAME_STORAGE_KEY = 'studentName';
+const ANSWER_STORAGE_KEY = 'tempUserAnswers';
+
+// =========================================================
+// 3. ELEMEN DOM
+// =========================================================
+
+const startScreen = document.getElementById('quiz-start-screen');
+const activeArea = document.getElementById('quiz-active-area');
+const resultScreen = document.getElementById('quiz-result-screen');
+const alreadyCompletedScreen = document.getElementById('already-completed-screen');
+const adminPanel = document.getElementById('admin-panel');
+
+const startBtn = document.getElementById('start-quiz-btn');
+const nameInput = document.getElementById('student-name');
+const questionCard = document.getElementById('question-card');
+const indicator = document.getElementById('question-indicator');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
+const submitBtn = document.getElementById('submit-btn');
+const progressFill = document.getElementById('progress-fill');
+const downloadBtn = document.getElementById('download-results-btn');
+const resetBtn = document.getElementById('reset-results-btn');
+
+// =========================================================
+// 4. FUNGSI UTAMA
+// =========================================================
+
+/**
+ * Memuat state kuis saat halaman dimuat (untuk mencegah pengerjaan ulang).
+ */
+function loadQuizState() {
+    const studentName = localStorage.getItem(NAME_STORAGE_KEY);
+    nameInput.value = studentName || '';
+    
+    // Aktifkan tombol mulai jika nama sudah terisi saat load
+    if (nameInput.value.trim()) {
+        startBtn.disabled = false;
+    }
+
+    // Cek apakah kuis sudah selesai dikerjakan
+    if (localStorage.getItem(COMPLETED_STORAGE_KEY) === 'true') {
+        showAlreadyCompletedScreen();
+        return;
+    }
+    
+    // Cek apakah ada jawaban sementara (jika browser di-refresh)
+    const tempAnswers = localStorage.getItem(ANSWER_STORAGE_KEY);
+    if (tempAnswers) {
+        userAnswers = JSON.parse(tempAnswers);
+        // Tampilkan layar aktif jika sudah mulai
+        if (studentName) {
+            startScreen.style.display = 'none';
+            activeArea.style.display = 'block';
+            renderQuestion(currentQuestionIndex);
+        }
+    }
+
+    // Cek mode guru (admin) - contoh sederhana, bisa dikembangkan dengan password
+    if (window.location.hash === '#admin') {
+        adminPanel.style.display = 'block';
+    }
+}
+
+/**
+ * Menampilkan soal saat ini ke DOM.
+ * @param {number} index - Index soal yang akan ditampilkan.
+ */
+function renderQuestion(index) {
+    // Animasi fade-out
+    questionCard.classList.remove('fade-in');
+    questionCard.classList.add('fade-out');
+
+    setTimeout(() => {
+        const q = quizQuestions[index];
+        let optionsHtml = '';
+        const optionsLabel = ['A', 'B', 'C', 'D', 'E'];
+
+        q.options.forEach((option, i) => {
+            const isChecked = userAnswers[index] === option;
+            optionsHtml += `
+                <div class="option" data-value="${option}">
+                    <input type="radio" id="q${index}-opt${i}" name="q${index}" value="${option}" ${isChecked ? 'checked' : ''} ${quizCompleted ? 'disabled' : ''}>
+                    <label for="q${index}-opt${i}" class="option-label">
+                        <span class="custom-radio"></span>
+                        <strong>${optionsLabel[i]}.</strong> ${option}
+                    </label>
+                </div>
+            `;
+        });
+
+        questionCard.innerHTML = `
+            <p><strong>Soal ${index + 1}:</strong></p>
+            <p>${q.question}</p>
+            <div id="options-container">${optionsHtml}</div>
+        `;
+
+        // Atur ulang event listener untuk opsi
+        document.querySelectorAll('.option').forEach(optionDiv => {
+            optionDiv.addEventListener('click', function() {
+                if (quizCompleted) return;
+                const radio = this.querySelector('input[type="radio"]');
+                radio.checked = true;
+                handleAnswerSelect(index, radio.value);
+            });
+        });
+
+        // Animasi fade-in
+        questionCard.classList.remove('fade-out');
+        questionCard.classList.add('fade-in');
+        
+        updateNavigationButtons();
+        updateProgress();
+        currentQuestionIndex = index;
+
+    }, 200); // Tunggu sebentar untuk efek fade-out
+}
+
+/**
+ * Menyimpan jawaban pengguna dan pindah ke soal berikutnya.
+ * @param {number} index - Index soal.
+ * @param {string} answer - Jawaban yang dipilih.
+ */
+function handleAnswerSelect(index, answer) {
+    userAnswers[index] = answer;
+    localStorage.setItem(ANSWER_STORAGE_KEY, JSON.stringify(userAnswers));
+    
+    // Pindah otomatis ke soal selanjutnya jika ada
+    if (index < quizQuestions.length - 1) {
+        setTimeout(() => {
+            renderQuestion(index + 1);
+        }, 100);
+    } else if (index === quizQuestions.length - 1) {
+        // Jika soal terakhir sudah dijawab, munculkan tombol kirim
+        submitBtn.style.display = 'inline-block';
+    }
+}
+
+/**
+ * Mengupdate status tombol navigasi (Sebelumnya/Selanjutnya/Kirim).
+ */
+function updateNavigationButtons() {
+    prevBtn.disabled = currentQuestionIndex === 0;
+    nextBtn.style.display = currentQuestionIndex < quizQuestions.length - 1 ? 'inline-block' : 'none';
+    
+    const allAnswered = userAnswers.every(answer => answer !== null);
+    submitBtn.style.display = (currentQuestionIndex === quizQuestions.length - 1 && allAnswered) ? 'inline-block' : 'none';
+
+    // Jika kuis sudah selesai, nonaktifkan tombol
+    if (quizCompleted) {
+        prevBtn.disabled = true;
+        nextBtn.style.display = 'none';
+        submitBtn.disabled = true;
+    }
+}
+
+/**
+ * Mengupdate progress bar dan indikator nomor soal.
+ */
+function updateProgress() {
+    const answeredCount = userAnswers.filter(a => a !== null).length;
+    const progressPercentage = (answeredCount / quizQuestions.length) * 100;
+
+    indicator.textContent = `${currentQuestionIndex + 1} dari ${quizQuestions.length}`;
+    progressFill.style.width = `${progressPercentage}%`;
+
+    // Pastikan tombol kirim muncul jika semua sudah dijawab
+    if (progressPercentage === 100) {
+        submitBtn.style.display = 'inline-block';
+    }
+}
+
+/**
+ * Menghitung skor dan menampilkan hasil.
+ */
+function calculateAndShowResult() {
+    let score = 0;
+    quizQuestions.forEach((q, i) => {
+        if (userAnswers[i] === q.answer) {
+            score += 1;
+        }
+    });
+
+    const endTime = Date.now();
+    const durationMs = endTime - startTime;
+    const minutes = Math.floor(durationMs / 60000);
+    const seconds = Math.floor((durationMs % 60000) / 1000);
+    const completionTime = `${minutes}m ${seconds}s`;
+    const completionDate = new Date().toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'short' });
+    const studentName = localStorage.getItem(NAME_STORAGE_KEY) || 'Anonim';
+    const totalScore = score * (100 / quizQuestions.length); // Skala 0-100
+
+    // Simpan hasil
+    const resultData = {
+        name: studentName,
+        score: totalScore.toFixed(0),
+        rawScore: score,
+        time: completionTime,
+        date: completionDate
+    };
+    saveResultToLocalStorage(resultData);
+
+    // Tandai kuis selesai
+    localStorage.setItem(COMPLETED_STORAGE_KEY, 'true');
+    quizCompleted = true;
+
+    // Nonaktifkan semua tombol
+    prevBtn.disabled = true;
+    nextBtn.style.display = 'none';
+    submitBtn.disabled = true;
+    
+    // Tampilkan layar hasil
+    activeArea.style.display = 'none';
+    resultScreen.style.display = 'block';
+
+    resultScreen.innerHTML = `
+        <h2>Hasil Kuis Kamu:</h2>
+        <p>Nama Siswa: <strong>${studentName}</strong></p>
+        <p>Waktu Pengerjaan: <strong>${completionTime}</strong></p>
+        <p>Tanggal Selesai: <strong>${completionDate}</strong></p>
+        <div class="score-display">${totalScore.toFixed(0)} / 100</div>
+        <p style="text-align: center;">Kerja bagus! Terus tingkatkan kemampuanmu 💪</p>
+    `;
+    
+    // Hapus jawaban sementara
+    localStorage.removeItem(ANSWER_STORAGE_KEY);
+}
+
+/**
+ * Menampilkan pesan jika kuis sudah selesai dikerjakan.
+ */
+function showAlreadyCompletedScreen() {
+    startScreen.style.display = 'none';
+    activeArea.style.display = 'none';
+    resultScreen.style.display = 'none';
+    alreadyCompletedScreen.style.display = 'block';
+    adminPanel.style.display = (window.location.hash === '#admin') ? 'block' : 'none';
+}
+
+// =========================================================
+// 5. PENYIMPANAN DATA (Local Storage)
+// =========================================================
+
+/**
+ * Menyimpan hasil kuis ke Local Storage.
+ * @param {object} result - Objek hasil kuis.
+ */
+function saveResultToLocalStorage(result) {
+    const results = JSON.parse(localStorage.getItem(RESULTS_STORAGE_KEY) || '[]');
+    results.push(result);
+    localStorage.setItem(RESULTS_STORAGE_KEY, JSON.stringify(results));
+}
+
+/**
+ * Mengunduh data hasil kuis dalam format CSV.
+ */
+function downloadResults() {
+    const results = JSON.parse(localStorage.getItem(RESULTS_STORAGE_KEY) || '[]');
+    if (results.length === 0) {
+        alert("Belum ada data hasil kuis yang tersimpan.");
+        return;
+    }
+
+    const header = ['Nama', 'Skor', 'Waktu Selesai', 'Tanggal'];
+    
+    let csvContent = header.join('|') + "\n";
+    
+    results.forEach(res => {
+        csvContent += `${res.name}|${res.score}|${res.time}|${res.date}\n`;
+    });
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'hasil_kuis_geografi.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+// =========================================================
+// 6. EVENT LISTENERS
+// =========================================================
+
+// Event listener untuk input nama (mengaktifkan tombol mulai)
+nameInput.addEventListener('input', function() {
+    startBtn.disabled = this.value.trim().length === 0;
+    localStorage.setItem(NAME_STORAGE_KEY, this.value.trim());
+});
+
+// Event listener tombol Mulai Kuis
+startBtn.addEventListener('click', function() {
+    const studentName = nameInput.value.trim();
+    if (!studentName) {
+        alert("Mohon masukkan nama lengkap Anda.");
+        return;
+    }
+
+    // Hanya bisa mulai jika belum selesai
+    if (localStorage.getItem(COMPLETED_STORAGE_KEY) === 'true') {
+        showAlreadyCompletedScreen();
+        return;
+    }
+
+    startTime = Date.now();
+    localStorage.setItem(NAME_STORAGE_KEY, studentName);
+    
+    startScreen.style.display = 'none';
+    activeArea.style.display = 'block';
+    
+    renderQuestion(currentQuestionIndex);
+});
+
+// Event listener tombol Sebelumnya
+prevBtn.addEventListener('click', () => {
+    if (currentQuestionIndex > 0) {
+        renderQuestion(currentQuestionIndex - 1);
+    }
+});
+
+// Event listener tombol Selanjutnya
+nextBtn.addEventListener('click', () => {
+    if (currentQuestionIndex < quizQuestions.length - 1) {
+        renderQuestion(currentQuestionIndex + 1);
+    }
+});
+
+// Event listener tombol Kirim Jawaban
+submitBtn.addEventListener('click', () => {
+    const confirmation = confirm("Apakah Anda yakin ingin mengirim jawaban? Jawaban yang sudah dikirim tidak dapat diubah.");
+    if (confirmation) {
+        calculateAndShowResult();
+    }
+});
+
+// Event listener tombol Download Hasil (Admin)
+downloadBtn.addEventListener('click', downloadResults);
+
+// Event listener tombol Reset Hasil (Admin)
+resetBtn.addEventListener('click', function() {
+    const adminConfirmation = confirm("PERINGATAN! Tindakan ini akan menghapus SEMUA hasil kuis yang tersimpan. Lanjutkan?");
+    if (adminConfirmation) {
+        localStorage.removeItem(RESULTS_STORAGE_KEY);
+        alert("Semua hasil kuis telah direset.");
+    }
+});
+
+// =========================================================
+// 7. INICIALISASI
+// =========================================================
+
+document.addEventListener('DOMContentLoaded', loadQuizState);
+```
