@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Interaktif: Pengembangan Wilayah & Tata Ruang</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS untuk Tampilan Elegan, Modern, dan Responsif */
+        :root {
+            --primary-blue: #007bff;
+            --light-blue: #e9f5ff;
+            --text-color: #333;
+            --bg-light: #f4f7f6;
+            --card-bg: #ffffff;
+            --shadow-light: rgba(0, 0, 0, 0.08);
+            --shadow-hover: rgba(0, 123, 255, 0.2);
+            --transition-time: 0.3s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .quiz-container {
+            width: 100%;
+            max-width: 700px;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px var(--shadow-light);
+            padding: 30px;
+            transition: all var(--transition-time) ease-in-out;
+        }
+
+        h1 {
+            color: var(--primary-blue);
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        /* --- Tampilan Awal (Input Nama) & Pesan Selesai --- */
+        #start-screen, #completion-message, #score-screen {
+            text-align: center;
+            padding: 20px;
+        }
+
+        #start-screen input[type="text"] {
+            width: 80%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        /* --- Tombol Umum --- */
+        .btn {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color var(--transition-time), transform 0.1s;
+            margin: 5px;
+        }
+
+        .btn:hover:not(:disabled) {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            background-color: #a0c3e8;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background-color: #5a6268;
+        }
+
+        /* --- Kuis Aktif --- */
+        #quiz-area {
+            display: none;
+            overflow: hidden; /* Penting untuk transisi */
+        }
+
+        /* Card Soal */
+        .question-card {
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px var(--shadow-light);
+            background-color: var(--card-bg);
+            /* Animasi Transisi */
+            opacity: 1;
+            transform: translateX(0);
+            transition: opacity var(--transition-time) ease, transform var(--transition-time) ease;
+        }
+
+        .question-card.slide-in-right {
+            opacity: 0;
+            transform: translateX(100%);
+        }
+
+        .question-card.slide-out-left {
+            opacity: 0;
+            transform: translateX(-100%);
+            position: absolute; /* Posisikan absolut untuk transisi */
+            width: calc(100% - 60px); /* Sesuaikan lebar dengan padding container */
+        }
+
+        .question-card h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        /* Indikator Soal */
+        #question-indicator {
+            text-align: right;
+            margin-bottom: 15px;
+            font-weight: 500;
+            color: var(--primary-blue);
+        }
+
+        /* Opsi Jawaban (Radio Button) */
+        .option-label {
+            display: block;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border: 2px solid var(--light-blue);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color var(--transition-time), border-color var(--transition-time), box-shadow var(--transition-time);
+            display: flex;
+            align-items: center;
+        }
+
+        .option-label:hover {
+            background-color: var(--light-blue);
+            border-color: var(--primary-blue);
+        }
+
+        input[type="radio"] {
+            margin-right: 15px;
+            /* Sembunyikan radio button bawaan */
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* Desain Radio Button Kustom */
+        .custom-radio {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--primary-blue);
+            border-radius: 50%;
+            margin-right: 15px;
+            position: relative;
+            flex-shrink: 0; /* Mencegah mengecil */
+        }
+
+        .option-label input:checked + .custom-radio {
+            background-color: var(--primary-blue);
+            border-color: var(--primary-blue);
+        }
+
+        .option-label input:checked + .custom-radio::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Style Saat Opsi Dipilih */
+        .option-label input:checked ~ .option-text {
+            font-weight: 500;
+            color: var(--primary-blue);
+        }
+
+        /* Tombol Navigasi Soal */
+        #navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        /* --- Tampilan Skor Akhir --- */
+        #score-screen {
+            padding: 30px;
+        }
+
+        #score-screen h2 {
+            font-size: 28px;
+            color: var(--primary-blue);
+            margin-bottom: 10px;
+        }
+
+        #score-screen p {
+            font-size: 18px;
+            margin-bottom: 25px;
+        }
+
+        #download-area {
+            margin-top: 20px;
+            border-top: 1px solid #ddd;
+            padding-top: 15px;
+        }
+
+        /* Responsif */
+        @media (max-width: 600px) {
+            .quiz-container {
+                padding: 15px;
+                margin-top: 0;
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            body {
+                padding: 0;
+                align-items: stretch;
+            }
+
+            .btn {
+                width: 100%;
+                margin: 5px 0;
+            }
+
+            #navigation-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        <h1>Kuis Pengembangan Wilayah & Tata Ruang</h1>
+
+        <div id="start-screen">
+            <p style="margin-bottom: 20px;">Masukkan nama Anda untuk memulai kuis. Kuis hanya bisa dikerjakan satu kali.</p>
+            <input type="text" id="student-name" placeholder="Nama Lengkap Siswa" required>
+            <button id="start-quiz-btn" class="btn">Mulai Kuis Sekarang! 🚀</button>
+            <div id="download-area" style="display: none;">
+                <p style="margin-top: 25px; font-style: italic;">Untuk Guru/Administrator:</p>
+                <button id="download-results-btn" class="btn btn-secondary">Download Hasil Kuis (.csv)</button>
+            </div>
+        </div>
+
+        <div id="quiz-area" style="display: none;">
+            <div id="question-indicator"></div>
+            <div id="question-display">
+                </div>
+            <div id="navigation-buttons">
+                <button id="prev-btn" class="btn" disabled>← Sebelumnya</button>
+                <button id="next-btn" class="btn">Selanjutnya →</button>
+                <button id="submit-btn" class="btn" style="display: none;">Kirim Jawaban ✅</button>
+            </div>
+        </div>
+
+        <div id="score-screen" style="display: none;">
+            <h2>Hasil Kuis</h2>
+            <p id="final-score-text">Skor Anda: 0 dari 100</p>
+            <p id="motivational-message">Kerja bagus! Terus tingkatkan kemampuanmu 💪</p>
+        </div>
+
+        <div id="completion-message" style="display: none;">
+            <h2>Kuis Selesai</h2>
+            <p style="font-size: 18px; margin-top: 15px;">Kamu sudah menyelesaikan kuis ini. Terima kasih!</p>
+        </div>
+
+    </div>
+
+    <script>
+        // Data Soal Pilihan Ganda (25 Soal)
+        const quizData = [
+            {
+                question: "Konsep utama yang menekankan pada keterkaitan antara aktivitas ekonomi, sosial, dan lingkungan dalam proses pembangunan suatu wilayah disebut...",
+                options: ["Pembangunan Berkelanjutan", "Pembangunan Terpusat", "Ekonomi Liberal", "Pertumbuhan Ekonomi Murni", "Regionalisme Absolut"],
+                answer: "Pembangunan Berkelanjutan"
+            },
+            {
+                question: "Apa tujuan utama dari penetapan Rencana Tata Ruang Wilayah (RTRW) di Indonesia?",
+                options: ["Memaksimalkan pendapatan daerah dari sektor properti.", "Mengatur pemanfaatan ruang untuk mencapai keseimbangan pembangunan dan lingkungan.", "Mempercepat proses perizinan investasi asing.", "Membatasi perpindahan penduduk antar wilayah.", "Menetapkan harga jual tanah secara seragam."],
+                answer: "Mengatur pemanfaatan ruang untuk mencapai keseimbangan pembangunan dan lingkungan."
+            },
+            {
+                question: "Dampak positif tata ruang kota yang terencana dengan baik terhadap kebahagiaan penduduk adalah...",
+                options: ["Meningkatnya biaya hidup secara keseluruhan.", "Akses yang lebih mudah ke fasilitas publik seperti taman dan transportasi.", "Peningkatan kemacetan lalu lintas.", "Penurunan kualitas udara karena pembangunan industri.", "Berkurangnya interaksi sosial karena jarak yang jauh."],
+                answer: "Akses yang lebih mudah ke fasilitas publik seperti taman dan transportasi."
+            },
+            {
+                question: "Salah satu indikator utama dalam mengukur keberhasilan pembangunan wilayah dari sudut pandang sosial dan kebahagiaan adalah...",
+                options: ["Produk Domestik Regional Bruto (PDRB) per kapita.", "Indeks Kebahagiaan atau Kualitas Hidup.", "Jumlah gedung pencakar langit yang dibangun.", "Total ekspor komoditas alam.", "Tingkat urbanisasi penduduk."],
+                answer: "Indeks Kebahagiaan atau Kualitas Hidup."
+            },
+            {
+                question: "Teori pusat pertumbuhan (Growth Pole Theory) yang dikembangkan oleh François Perroux fokus pada...",
+                options: ["Penyebaran investasi secara merata di seluruh wilayah.", "Konsentrasi aktivitas ekonomi pada titik tertentu yang mendorong perkembangan sekitarnya.", "Pengembangan sektor pertanian sebagai basis utama.", "Pengurangan peran pemerintah dalam perencanaan wilayah.", "Pembangunan infrastruktur tanpa memperhatikan dampak sosial."],
+                answer: "Konsentrasi aktivitas ekonomi pada titik tertentu yang mendorong perkembangan sekitarnya."
+            },
+            {
+                question: "Permasalahan 'urban sprawl' (perluasan kota yang tidak terencana) seringkali mengakibatkan penurunan kebahagiaan penduduk karena...",
+                options: ["Menciptakan lingkungan yang sangat padat dan efisien.", "Menyebabkan perjalanan (komuter) yang lebih panjang dan mahal.", "Meningkatkan ketersediaan lahan hijau di pusat kota.", "Menjamin akses yang setara ke semua fasilitas.", "Meningkatnya konektivitas digital."],
+                answer: "Menyebabkan perjalanan (komuter) yang lebih panjang dan mahal."
+            },
+            {
+                question: "Dalam konteks perencanaan tata ruang, kawasan lindung adalah...",
+                options: ["Kawasan yang diutamakan untuk pembangunan industri berat.", "Kawasan yang ditetapkan untuk konservasi alam dan perlindungan fungsi ekologis.", "Kawasan yang hanya boleh digunakan untuk perumahan mewah.", "Kawasan yang menjadi pusat pemerintahan.", "Kawasan yang bebas dari semua regulasi pembangunan."],
+                answer: "Kawasan yang ditetapkan untuk konservasi alam dan perlindungan fungsi ekologis."
+            },
+            {
+                question: "Prinsip pembangunan yang mengintegrasikan penggunaan lahan, transportasi, dan layanan publik secara efisien untuk menciptakan komunitas yang dapat dilalui dengan berjalan kaki disebut...",
+                options: ["Pembangunan Monolitik.", "Smart Growth (Pertumbuhan Cerdas).", "Ekspansi Horizontal.", "Ekonomi Eksklusif.", "Teori Lokasi Von Thünen."],
+                answer: "Smart Growth (Pertumbuhan Cerdas)."
+            },
+            {
+                question: "Apa yang dimaksud dengan 'zonasi' dalam tata ruang?",
+                options: ["Proses penggantian nama jalan di suatu kota.", "Penetapan batas-batas geografis suatu wilayah administrasi.", "Pembagian wilayah menjadi zona-zona dengan ketentuan penggunaan lahan yang berbeda.", "Pengukuran tingkat polusi udara di suatu daerah.", "Pemberian insentif pajak kepada investor."],
+                answer: "Pembagian wilayah menjadi zona-zona dengan ketentuan penggunaan lahan yang berbeda."
+            },
+            {
+                question: "Penyediaan ruang terbuka hijau (RTH) yang memadai di perkotaan sangat penting untuk kebahagiaan penduduk karena...",
+                options: ["Meningkatkan harga properti di sekitarnya.", "Mengurangi kebutuhan akan transportasi umum.", "Menyediakan tempat rekreasi, mengurangi stres, dan meningkatkan kualitas udara.", "Memfasilitasi pembangunan gedung bertingkat.", "Menciptakan monopoli bisnis perikanan."],
+                answer: "Menyediakan tempat rekreasi, mengurangi stres, dan meningkatkan kualitas udara."
+            },
+            {
+                question: "Kebijakan desentralisasi pembangunan wilayah bertujuan untuk...",
+                options: ["Memusatkan semua kekuasaan di ibu kota negara.", "Meningkatkan otonomi daerah dan pemerataan pembangunan di luar pusat.", "Mengurangi anggaran belanja pemerintah pusat.", "Menghapus semua regulasi pembangunan di daerah.", "Menciptakan sistem pemerintahan yang seragam di semua provinsi."],
+                answer: "Meningkatkan otonomi daerah dan pemerataan pembangunan di luar pusat."
+            },
+            {
+                question: "Konflik pemanfaatan ruang yang paling umum terjadi di perkotaan adalah konflik antara...",
+                options: ["Kawasan lindung dan kawasan konservasi.", "Kepentingan perumahan dan kepentingan industri/komersial.", "Penggunaan sepeda dan penggunaan jalan tol.", "Sektor pendidikan dan sektor kesehatan.", "Tanaman pangan dan tanaman keras."],
+                answer: "Kepentingan perumahan dan kepentingan industri/komersial."
+            },
+            {
+                question: "Metode yang digunakan untuk menilai dampak suatu proyek pembangunan terhadap kualitas hidup dan lingkungan disebut...",
+                options: ["Analisis Laporan Keuangan.", "Analisis Mengenai Dampak Lingkungan (AMDAL).", "Survei Preferensi Konsumen.", "Penetapan Standar ISO.", "Studi Kelayakan Bisnis."],
+                answer: "Analisis Mengenai Dampak Lingkungan (AMDAL)."
+            },
+            {
+                question: "Ciri-ciri permukiman kumuh (slum) yang secara signifikan menurunkan kebahagiaan penduduk adalah...",
+                options: ["Akses mudah ke transportasi publik modern.", "Lingkungan yang bersih, teratur, dan infrastruktur memadai.", "Kepadatan tinggi, sanitasi buruk, dan ketidakpastian hak atas tanah.", "Tersedianya banyak ruang terbuka hijau.", "Tingkat kriminalitas yang sangat rendah."],
+                answer: "Kepadatan tinggi, sanitasi buruk, dan ketidakpastian hak atas tanah."
+            },
+            {
+                question: "Pembangunan infrastruktur transportasi berbasis massal (misalnya MRT/LRT) di perkotaan berkontribusi pada kebahagiaan penduduk dengan cara...",
+                options: ["Memaksa semua orang memiliki kendaraan pribadi.", "Mengurangi kemacetan, polusi, dan waktu tempuh komuter.", "Meningkatkan biaya transportasi secara drastis.", "Mengalihkan semua lahan pertanian menjadi jalan raya.", "Menciptakan isolasi antar wilayah."],
+                answer: "Mengurangi kemacetan, polusi, dan waktu tempuh komuter."
+            },
+            {
+                question: "Apa yang menjadi fokus utama dalam perencanaan tata ruang yang berorientasi pada masyarakat (people-centered planning)?",
+                options: ["Memaksimalkan keuntungan pengembang properti.", "Memastikan partisipasi warga dan memperhatikan kebutuhan serta aspirasi komunitas.", "Hanya mengikuti instruksi dari pemerintah pusat.", "Mengutamakan pembangunan monumen-monumen besar.", "Mengabaikan aspek budaya lokal."],
+                answer: "Memastikan partisipasi warga dan memperhatikan kebutuhan serta aspirasi komunitas."
+            },
+            {
+                question: "Konsep 'kota kompak' (compact city) dalam tata ruang bertujuan untuk...",
+                options: ["Mendorong penyebaran penduduk ke area pinggiran.", "Menciptakan kepadatan tinggi, efisiensi penggunaan lahan, dan mengurangi perjalanan.", "Menghilangkan semua bangunan komersial dari pusat kota.", "Membuat kota hanya diperuntukkan bagi pejalan kaki.", "Mengurangi jumlah fasilitas publik."],
+                answer: "Menciptakan kepadatan tinggi, efisiensi penggunaan lahan, dan mengurangi perjalanan."
+            },
+            {
+                question: "Faktor ekonomi yang paling memengaruhi tata ruang dan pembangunan wilayah adalah...",
+                options: ["Jenis musik yang populer di wilayah tersebut.", "Distribusi sumber daya alam, kegiatan industri, dan peluang kerja.", "Jumlah hari libur nasional dalam setahun.", "Tingkat konsumsi makanan cepat saji.", "Warna cat rumah yang digunakan penduduk."],
+                answer: "Distribusi sumber daya alam, kegiatan industri, dan peluang kerja."
+            },
+            {
+                question: "Masalah 'ketidakadilan spasial' dalam pembangunan wilayah mengacu pada...",
+                options: ["Perbedaan waktu tempuh antara dua lokasi.", "Distribusi sumber daya dan fasilitas yang tidak merata antar wilayah.", "Perbedaan iklim di berbagai zona.", "Variasi jenis tanah di suatu daerah.", "Keseragaman arsitektur bangunan."],
+                answer: "Distribusi sumber daya dan fasilitas yang tidak merata antar wilayah."
+            },
+            {
+                question: "Dalam teori lokasi industri, pertimbangan yang paling dominan saat memilih lokasi adalah...",
+                options: ["Jarak terdekat ke lokasi bahan baku dan pasar.", "Tingkat kelembaban udara.", "Ketersediaan tempat wisata.", "Keberadaan bangunan bersejarah.", "Jumlah toko buku di sekitar lokasi."],
+                answer: "Jarak terdekat ke lokasi bahan baku dan pasar."
+            },
+            {
+                question: "Apa peran 'public space' (ruang publik) seperti alun-alun atau taman kota dalam meningkatkan kebahagiaan penduduk?",
+                options: ["Sebagai tempat parkir kendaraan pribadi.", "Sebagai wadah interaksi sosial, rekreasi, dan identitas komunitas.", "Sebagai lokasi pembuangan limbah industri.", "Sebagai area eksklusif bagi kalangan tertentu.", "Sebagai area yang dilarang untuk dikunjungi."],
+                answer: "Sebagai wadah interaksi sosial, rekreasi, dan identitas komunitas."
+            },
+            {
+                question: "Regulasi tata ruang yang terlalu ketat dan tidak fleksibel dapat berdampak negatif pada...",
+                options: ["Kualitas udara perkotaan.", "Inovasi dan adaptasi pembangunan terhadap perubahan kebutuhan masyarakat.", "Penghijauan kota.", "Pemanfaatan energi terbarukan.", "Kecepatan internet."],
+                answer: "Inovasi dan adaptasi pembangunan terhadap perubahan kebutuhan masyarakat."
+            },
+            {
+                question: "Tujuan dari pembangunan yang inklusif (inclusive development) dalam konteks wilayah adalah...",
+                options: ["Hanya fokus pada pertumbuhan ekonomi kelompok kaya.", "Memastikan semua kelompok masyarakat, termasuk yang rentan, mendapat manfaat dari pembangunan.", "Membangun hanya di area dengan potensi wisata.", "Mengecualikan partisipasi masyarakat dalam proses perencanaan.", "Hanya memperhatikan dampak lingkungan tanpa aspek sosial."],
+                answer: "Memastikan semua kelompok masyarakat, termasuk yang rentan, mendapat manfaat dari pembangunan."
+            },
+            {
+                question: "Lahan basah dan sempadan sungai sering ditetapkan sebagai kawasan lindung karena peranannya dalam...",
+                options: ["Memudahkan pembangunan pusat perbelanjaan.", "Pengendalian banjir, penyaring polutan, dan habitat keanekaragaman hayati.", "Menarik perhatian wisatawan asing.", "Menyediakan ruang untuk aktivitas militer.", "Lokasi ideal untuk pembangunan pembangkit listrik tenaga nuklir."],
+                answer: "Pengendalian banjir, penyaring polutan, dan habitat keanekaragaman hayati."
+            },
+            {
+                question: "Keputusan tata ruang yang mengalokasikan kawasan tertentu untuk perumahan bersubsidi (murah) berkontribusi pada kebahagiaan penduduk dengan cara...",
+                options: ["Menghambat perkembangan transportasi umum.", "Meningkatkan akses perumahan yang layak dan terjangkau bagi masyarakat berpenghasilan rendah.", "Menciptakan segregasi sosial yang parah.", "Mengurangi kualitas infrastruktur kota.", "Meningkatkan kepadatan pusat kota secara tidak sehat."],
+                answer: "Meningkatkan akses perumahan yang layak dan terjangkau bagi masyarakat berpenghasilan rendah."
+            }
+        ];
+
+        // Variabel Status Kuis Global
+        let currentQuestionIndex = 0;
+        let studentAnswers = []; // Array untuk menyimpan jawaban siswa
+        let studentName = '';
+        let startTime = null;
+
+        // Kunci Local Storage
+        const LS_KEY_STATUS = 'quizCompletedStatus';
+        const LS_KEY_RESULTS = 'quizResultsData';
+
+        // --- Elemen DOM Utama ---
+        const startScreen = document.getElementById('start-screen');
+        const quizArea = document.getElementById('quiz-area');
+        const scoreScreen = document.getElementById('score-screen');
+        const completionMessage = document.getElementById('completion-message');
+        const startQuizBtn = document.getElementById('start-quiz-btn');
+        const studentNameInput = document.getElementById('student-name');
+        const questionDisplay = document.getElementById('question-display');
+        const indicator = document.getElementById('question-indicator');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const submitBtn = document.getElementById('submit-btn');
+        const downloadResultsBtn = document.getElementById('download-results-btn');
+
+        // --- FUNGSI UTAMA ---
+
+        /**
+         * @description Memeriksa status kuis di localStorage saat halaman dimuat.
+         */
+        function checkQuizStatus() {
+            // Cek apakah mode Guru diaktifkan (simulasi sederhana)
+            const urlParams = new URLSearchParams(window.location.search);
+            const isTeacherMode = urlParams.get('mode') === 'guru';
+
+            if (isTeacherMode) {
+                // Tampilkan tombol download dan sembunyikan input siswa jika mode guru
+                document.getElementById('download-area').style.display = 'block';
+                startQuizBtn.style.display = 'none';
+                studentNameInput.style.display = 'none';
+                document.getElementById('start-screen').querySelector('p').textContent = 'Mode Guru. Silakan unduh hasil kuis.';
+            } else {
+                // Mode Siswa
+                const status = localStorage.getItem(LS_KEY_STATUS);
+
+                if (status === 'completed') {
+                    // Jika kuis sudah selesai, tampilkan pesan selesai
+                    startScreen.style.display = 'none';
+                    completionMessage.style.display = 'block';
+                    // Nonaktifkan tombol unduh di mode siswa
+                    downloadResultsBtn.style.display = 'none';
+                } else {
+                    // Jika belum selesai, biarkan di start screen
+                    startScreen.style.display = 'block';
+                    downloadResultsBtn.style.display = 'none'; // Pastikan tombol guru tersembunyi
+                }
+            }
+        }
+
+        /**
+         * @description Memulai kuis setelah nama siswa diinput.
+         */
+        function startQuiz() {
+            studentName = studentNameInput.value.trim();
+            if (!studentName) {
+                alert("Mohon masukkan nama Anda untuk memulai kuis.");
+                return;
+            }
+
+            // Inisialisasi array jawaban
+            studentAnswers = new Array(quizData.length).fill(null);
+            currentQuestionIndex = 0;
+            startTime = new Date();
+
+            // Sembunyikan start screen, tampilkan quiz area
+            startScreen.style.display = 'none';
+            quizArea.style.display = 'block';
+
+            loadQuestion(currentQuestionIndex);
+        }
+
+        /**
+         * @description Memuat soal ke layar dengan animasi transisi.
+         * @param {number} index - Indeks soal yang akan ditampilkan.
+         * @param {string} direction - 'next' atau 'prev' untuk arah transisi.
+         */
+        function loadQuestion(index, direction = null) {
+            const questionData = quizData[index];
+            const isAnswered = studentAnswers[index] !== null;
+
+            // Transisi keluar
+            const existingCard = document.querySelector('.question-card');
+            if (existingCard) {
+                // Terapkan animasi keluar berdasarkan arah
+                existingCard.classList.add(direction === 'next' ? 'slide-out-left' : 'slide-out-right');
+
+                // Tunggu transisi selesai sebelum mengganti konten
+                setTimeout(() => {
+                    renderQuestion(questionData, index, isAnswered);
+                    // Terapkan animasi masuk
+                    const newCard = document.querySelector('.question-card');
+                    if (newCard) {
+                        newCard.classList.remove('slide-out-left', 'slide-out-right');
+                        newCard.classList.add(direction === 'next' ? 'slide-in-right' : 'slide-in-left');
+                        // Paksa reflow sebelum menghapus kelas transisi masuk agar transisi berjalan
+                        void newCard.offsetWidth;
+                        newCard.classList.remove('slide-in-right', 'slide-in-left');
+                    }
+                }, direction ? 250 : 0); // Waktu harus sesuai dengan transition-time CSS
+            } else {
+                renderQuestion(questionData, index, isAnswered);
+            }
+
+            // Update status tombol navigasi
+            updateNavigationButtons(index);
+        }
+
+        /**
+         * @description Menghasilkan markup HTML untuk soal dan opsinya.
+         */
+        function renderQuestion(data, index, isAnswered) {
+            let optionsHtml = data.options.map((option, i) => {
+                const optionId = `q${index}-opt${i}`;
+                const isChecked = studentAnswers[index] === option;
+                // Radio button name harus unik per soal
+                return `
+                    <label for="${optionId}" class="option-label" data-option="${option}">
+                        <input type="radio" id="${optionId}" name="question-${index}" value="${option}" ${isChecked ? 'checked' : ''} ${isAnswered ? 'disabled' : ''}>
+                        <span class="custom-radio"></span>
+                        <span class="option-text">(${String.fromCharCode(65 + i)}) ${option}</span>
+                    </label>
+                `;
+            }).join('');
+
+            const questionHtml = `
+                <div class="question-card" id="q-card-${index}">
+                    <h2>${index + 1}. ${data.question}</h2>
+                    <form id="options-form-${index}" data-index="${index}">
+                        ${optionsHtml}
+                    </form>
+                </div>
+            `;
+
+            questionDisplay.innerHTML = questionHtml;
+            indicator.textContent = `Soal ${index + 1} dari ${quizData.length}`;
+
+            // Tambahkan event listener untuk menyimpan jawaban saat opsi diklik
+            document.querySelectorAll(`#options-form-${index} input[type="radio"]`).forEach(radio => {
+                radio.addEventListener('change', handleAnswerSelection);
+            });
+        }
+
+        /**
+         * @description Mengelola penyimpanan jawaban saat siswa memilih opsi.
+         */
+        function handleAnswerSelection(event) {
+            const form = event.target.closest('form');
+            const index = parseInt(form.dataset.index);
+            const selectedAnswer = event.target.value;
+
+            // Simpan jawaban dan nonaktifkan semua opsi pada soal ini (Hanya bisa jawab 1 kali)
+            studentAnswers[index] = selectedAnswer;
+            document.querySelectorAll(`#options-form-${index} input[type="radio"]`).forEach(radio => {
+                radio.disabled = true;
+            });
+
+            // Otomatis pindah ke soal berikutnya setelah menjawab (jika bukan soal terakhir)
+            if (index < quizData.length - 1) {
+                setTimeout(() => {
+                    goToQuestion(index + 1, 'next');
+                }, 400); // Penundaan singkat untuk transisi
+            } else if (index === quizData.length - 1) {
+                // Jika soal terakhir sudah dijawab, tampilkan tombol Kirim
+                submitBtn.style.display = 'block';
+                nextBtn.style.display = 'none';
+            }
+        }
+
+        /**
+         * @description Mengelola perpindahan soal.
+         * @param {number} newIndex - Indeks soal tujuan.
+         * @param {string} direction - 'next' atau 'prev'.
+         */
+        function goToQuestion(newIndex, direction) {
+            if (newIndex >= 0 && newIndex < quizData.length) {
+                currentQuestionIndex = newIndex;
+                loadQuestion(currentQuestionIndex, direction);
+            }
+        }
+
+        /**
+         * @description Memperbarui status tombol navigasi (Sebelumnya, Selanjutnya, Kirim).
+         */
+        function updateNavigationButtons(index) {
+            prevBtn.disabled = index === 0;
+
+            if (index === quizData.length - 1) {
+                // Di soal terakhir, tampilkan Kirim, nonaktifkan Selanjutnya
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'block';
+                submitBtn.disabled = false;
+            } else {
+                // Di soal biasa, tampilkan Selanjutnya
+                nextBtn.style.display = 'block';
+                submitBtn.style.display = 'none';
+                // Tombol Selanjutnya akan menonaktifkan diri jika soal belum dijawab
+                nextBtn.disabled = studentAnswers[index] === null;
+            }
+        }
+
+        /**
+         * @description Menghitung dan menampilkan hasil akhir kuis.
+         */
+        function submitQuiz() {
+            // Cek apakah semua soal sudah dijawab sebelum mengirim
+            const unansweredCount = studentAnswers.filter(a => a === null).length;
+            if (unansweredCount > 0) {
+                alert(`Anda belum menjawab ${unansweredCount} soal. Harap jawab semua soal sebelum mengirim.`);
+                return;
+            }
+
+            let correctCount = 0;
+            const totalQuestions = quizData.length;
+
+            // Hitung skor
+            quizData.forEach((question, index) => {
+                if (studentAnswers[index] === question.answer) {
+                    correctCount++;
+                }
+            });
+
+            const scorePercentage = Math.round((correctCount / totalQuestions) * 100);
+
+            // Hitung waktu pengerjaan
+            const endTime = new Date();
+            const durationMs = endTime - startTime;
+            const durationSeconds = Math.round(durationMs / 1000);
+            const durationMinutes = Math.floor(durationSeconds / 60);
+            const remainingSeconds = durationSeconds % 60;
+            const completionTime = `${durationMinutes}m ${remainingSeconds}s`;
+            const completionDate = endTime.toLocaleDateString('id-ID');
+
+            // Simpan hasil ke localStorage
+            saveResult({
+                Nama: studentName,
+                Skor: `${correctCount} dari ${totalQuestions} (${scorePercentage}%)`,
+                WaktuSelesai: completionTime,
+                Tanggal: completionDate
+            });
+
+            // Tandai kuis selesai di localStorage
+            localStorage.setItem(LS_KEY_STATUS, 'completed');
+
+            // Nonaktifkan tombol kuis dan tampilkan skor
+            startQuizBtn.disabled = true;
+            submitBtn.disabled = true;
+            nextBtn.disabled = true;
+
+            quizArea.style.display = 'none';
+            scoreScreen.style.display = 'block';
+            document.getElementById('final-score-text').textContent = `Skor Anda: ${correctCount} dari ${totalQuestions} (${scorePercentage}%)`;
+        }
+
+        /**
+         * @description Menyimpan hasil kuis ke localStorage dalam format array objek.
+         * @param {object} result - Objek hasil kuis siswa.
+         */
+        function saveResult(result) {
+            const results = JSON.parse(localStorage.getItem(LS_KEY_RESULTS) || '[]');
+            results.push(result);
+            localStorage.setItem(LS_KEY_RESULTS, JSON.stringify(results));
+        }
+
+        /**
+         * @description Mengubah data hasil kuis menjadi format CSV dan memicu unduhan.
+         */
+        function downloadResults() {
+            const results = JSON.parse(localStorage.getItem(LS_KEY_RESULTS) || '[]');
+
+            if (results.length === 0) {
+                alert("Tidak ada data hasil kuis yang tersimpan untuk diunduh.");
+                return;
+            }
+
+            const headers = ["Nama", "Skor", "Waktu Selesai", "Tanggal"];
+
+            // Baris CSV: header + data
+            let csv = headers.join('|') + '\n'; // Gunakan pipe '|' sebagai pemisah
+            results.forEach(row => {
+                // Urutkan nilai sesuai urutan header
+                const values = headers.map(header => {
+                    // Pastikan nilai tidak mengandung pemisah internal, jika ada, hapus atau ganti
+                    let value = row[header] || '';
+                    value = String(value).replace(/\|/g, ''); // Hapus karakter pipe
+                    return value;
+                });
+                csv += values.join('|') + '\n';
+            });
+
+            // Membuat Blob dan Link Unduhan
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'hasil_kuis_pengembangan_wilayah.csv');
+            link.style.visibility = 'hidden';
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            alert(`Berhasil mengunduh ${results.length} data hasil kuis! File: hasil_kuis_pengembangan_wilayah.csv`);
+        }
+
+        // --- EVENT LISTENERS ---
+
+        // Tombol Mulai Kuis
+        startQuizBtn.addEventListener('click', startQuiz);
+
+        // Tombol Sebelumnya
+        prevBtn.addEventListener('click', () => {
+            goToQuestion(currentQuestionIndex - 1, 'prev');
+        });
+
+        // Tombol Selanjutnya
+        nextBtn.addEventListener('click', () => {
+            // Menonaktifkan tombol 'Selanjutnya' jika soal saat ini belum dijawab
+            if (studentAnswers[currentQuestionIndex] === null) {
+                alert("Anda harus menjawab soal ini sebelum melanjutkan.");
+                return;
+            }
+            goToQuestion(currentQuestionIndex + 1, 'next');
+        });
+
+        // Tombol Kirim Jawaban
+        submitBtn.addEventListener('click', submitQuiz);
+
+        // Tombol Download Hasil
+        downloadResultsBtn.addEventListener('click', downloadResults);
+
+        // Inisialisasi: Cek status saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', checkQuizStatus);
+    </script>
+</body>
+</html>
